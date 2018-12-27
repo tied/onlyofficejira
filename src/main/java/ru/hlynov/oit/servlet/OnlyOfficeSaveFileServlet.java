@@ -76,13 +76,12 @@ public class OnlyOfficeSaveFileServlet extends HttpServlet {
         }
 
 
-        PrintWriter writer = resp.getWriter();
-        writer.write("{\"error\":0}");
-
-
 //        PrintWriter writer = resp.getWriter();
-//        writer.write("{\"error\":" + error + "}");
-//        log.info("error = " + error);
+//        writer.write("{\"error\":0}");
+
+        PrintWriter writer = resp.getWriter();
+        writer.write("{\"error\":" + error + "}");
+        log.info("error = " + error);
     }
 
 

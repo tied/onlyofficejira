@@ -1,0 +1,131 @@
+
+##$webResourceManager.requireResourcesForContext("onlyofficejira")
+
+#set ($overdueDays = $daysAwayFromDueDate * -1)
+#if ($daysAwayFromDueDate)
+    #if ($daysAwayFromDueDate > 1)
+    <span style="font-weight: bold; color: green;">This issue is due in $daysAwayFromDueDate days.</span>
+    #elseif ($daysAwayFromDueDate == 1)
+    <span style="font-weight: bold; color: blue;">This is issue is due tomorrow.</span>
+    #elseif ($daysAwayFromDueDate == 0)
+    <span style="font-weight: bold; color: purple;">This issue is due today.</span>
+    #elseif ($daysAwayFromDueDate == -1)
+    <span style="font-weight: bold; color: #ff4500;">This issue was due yesterday!</span>
+    #elseif ($daysAwayFromDueDate < -1)
+    <span style="font-weight: bold; color: red;">This issue is overdue by $overdueDays days!</span>
+    #end
+#end
+
+
+<ol id="file_attachments" class="item-attachments">
+
+
+#foreach($oneAttach in $attachments)
+
+
+        <li class="attachment-content js-file-attachment" data-attachment-id="$oneAttach.getId()" data-issue-id="$issueid" data-attachment-type="file" resolved="">
+            <div class="attachment-thumb">
+                <a href="$jirabaseurl/secure/attachment/$oneAttach.getId()/$oneAttach.getFileName()">
+                    <span class="aui-icon aui-icon-small attachment-icon aui-iconfont-devtools-file"></span>
+                </a>
+            </div>
+            <dl>
+                <dt class="attachment-title" style="display: block; width: 300px; word-wrap: normal;">
+                    <a href="$jirabaseurl/secure/attachment/$oneAttach.getId()/$oneAttach.getFileName()" title="$oneAttach.getFileName()" draggable="false" >$oneAttach.getFileName()</a>
+                </dt>
+                <dd class="attachment-delete">
+                    <a title="Удалить вложение" id="del_$oneAttach.getId()" href="$jirabaseurl/secure/DeleteAttachment!default.jspa?id=$issueid&amp;deleteAttachmentId=$oneAttach.getId()&amp;from=issue"><span class="icon-default aui-icon aui-icon-small aui-iconfont-delete">Удалить вложение</span></a>
+                </dd>
+
+                <dd class="attachment-date"><time class="livestamp" datetime="$oneAttach.getCreated()"></time></dd>
+
+                <dd class="attachment-size" style="margin-right: 0px">
+##                    <a href="$jirabaseurl/plugins/servlet/onlyoffice/doceditor?projectId=$projectId&issueId=$issueId&attachmentId=$oneAttach.getId()&fileurl=$jirabaseurl/secure/attachment/$oneAttach.getId()/$oneAttach.getFileName()&filename=$oneAttach.getFileName()"> Редактировать
+##                        <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
+##                    </a>
+                    <a href="$jirabaseurl/plugins/servlet/onlyoffice/doceditor?projectId=$projectId&issueId=$issueId&attachmentId=$oneAttach.getId()&fileurl=$jirabaseurl/rest/onlyoffice/1.0/file/get/$projectId/$issueId/$oneAttach.getId()/$oneAttach.getFileName()&filename=$oneAttach.getFileName()"> Редактировать
+                        <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
+                    </a>
+
+                </dd>
+
+##                <dd class="attachment-size">$oneAttach.getFileSize()</dd>
+
+
+                <dd class="attachment-author">$oneAttach.getAuthor()</dd>
+            </dl>
+        </li>
+
+#end
+
+</ol>
+
+##<div id="placeholder"></div>
+## вобщем ссылка на сервлет редактор выглядит так - http://localhost:2990/jira/plugins/servlet/onlyofficeeditorservlet
+##<script type="text/javascript">
+
+
+
+    ## var config = {
+    ##             width: "100%",
+    ##             height: "100%",
+    ##
+    ##             type: type,
+    ##             documentType: "<?php echo getDocumentType($filename) ?>",
+    ##             document: {
+    ##                 title: fileName,
+    ##                 url: "<?php echo $fileuri ?>",
+    ##                 fileType: fileType,
+    ##                 key: "<?php echo getDocEditorKey($filename) ?>",
+    ##
+    ##                 info: {
+    ##                     author: "Me",
+    ##                     created: "<?php echo date('d.m.y') ?>",
+    ##                 },
+    ##
+    ##                 permissions: {
+    ##                     download: true,
+    ##                     //edit: <?//php echo (in_array(strtolower('.' . pathinfo($filename, PATHINFO_EXTENSION)), $GLOBALS['DOC_SERV_EDITED']) && $_GET["action"] != "review" ? "true" : "false") ?>,
+    ##                     edit: true,
+    ##                     review: true
+    ##                 }
+    ##             },
+    ##             editorConfig: {
+    ##                 //mode: '<?//php echo $GLOBALS['MODE'] != 'view' && in_array(strtolower('.' . pathinfo($filename, PATHINFO_EXTENSION)), $GLOBALS['DOC_SERV_EDITED']) && $_GET["action"] != "view" ? "edit" : "view"  ?>',
+    ##                 mode: "edit",
+    ##
+    ##                 lang: "en",
+    ##
+    ##                 callbackUrl: "<?php echo getCallbackUrl($filename) ?>",
+    ##
+    ##                 user: user,
+    ##
+    ##                 embedded: {
+    ##                     saveUrl: "<?php echo $fileuriUser ?>",
+    ##                     embedUrl: "<?php echo $fileuriUser ?>",
+    ##                     shareUrl: "<?php echo $fileuriUser ?>",
+    ##                     toolbarDocked: "top",
+    ##                 },
+    ##
+    ##                 customization: {
+    ##                     about: true,
+    ##                     feedback: true,
+    ##                     goback: {
+    ##                         url: "<?php echo serverPath() ?>",
+    ##                     },
+    ##                 },
+    ##             },
+    ##             events: {
+    ##                 'onReady': onReady,
+    ##                 'onDocumentStateChange': onDocumentStateChange,
+    ##                 'onRequestEditRights': onRequestEditRights,
+    ##                 'onError': onError,
+    ##                 'onOutdatedVersion': onOutdatedVersion,
+    ##             }
+    ##         };
+    ##
+    ## var docEditor = new DocsAPI.DocEditor("placeholder", config);
+
+
+
+##</script>

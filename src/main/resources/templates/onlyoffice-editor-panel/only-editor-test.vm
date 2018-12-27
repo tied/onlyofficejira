@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ANSI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ONLYOFFICE</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <style type="text/css">
+        html {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            background: #fff;
+            color: #333;
+            font-family: Arial, Tahoma,sans-serif;
+            font-size: 12px;
+            font-weight: normal;
+            height: 100%;
+            margin: 0;
+            overflow-y: hidden;
+            padding: 0;
+            text-decoration: none;
+        }
+
+        .form {
+            height: 100%;
+        }
+
+        div {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+</head>
+<body>
+<div>
+    <span>docserviceApiUrl</span>&nbsp;&nbsp;&nbsp;<span>${docserviceApiUrl}</span>
+</div>
+<div>
+    <span>key</span>&nbsp;&nbsp;&nbsp;<span>${key}</span>
+</div>
+<div>
+    <span>fileUrl</span>&nbsp;&nbsp;&nbsp;<span>${fileUrl}</span>
+</div>
+<div>
+    <span>fileName</span>&nbsp;&nbsp;&nbsp;<span>${fileName}</span>
+</div>
+<div>
+    <span>callbackUrl</span>&nbsp;&nbsp;&nbsp;<span>${callbackUrl}</span>
+
+    <span>$jirabaseurl/plugins/servlet/onlyoffice/save?projectId=$projectId&issueId=$issueId&attachmentId=$attachmentId</span>
+
+
+</div>
+<div>
+    <span>userId</span>&nbsp;&nbsp;&nbsp;<span>${userId}</span>
+</div>
+<div>
+    <span>userName</span>&nbsp;&nbsp;&nbsp;<span>${userName}</span>
+</div>
+
+<div>
+    <span>projectId</span>&nbsp;&nbsp;&nbsp;<span>${projectId}</span>
+</div>
+<div>
+    <span>issueId</span>&nbsp;&nbsp;&nbsp;<span>${issueId}</span>
+</div>
+<div>
+    <span>attachmentId</span>&nbsp;&nbsp;&nbsp;<span>${attachmentId}</span>
+</div>
+
+<div>
+    <span>errorMessage</span>&nbsp;&nbsp;&nbsp;<span>${errorMessage}</span>
+</div>
+
+
+</body>
+</html>

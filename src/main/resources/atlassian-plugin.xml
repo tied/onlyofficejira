@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="onlyofficejira"/>
+  <!-- add our web resources -->
+  <web-resource key="onlyofficejira-resources" name="onlyofficejira Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="onlyofficejira.css" location="/css/onlyofficejira.css"/>
+    <resource type="download" name="onlyofficejira.js" location="/js/onlyofficejira.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <context>onlyofficejira</context>
+  </web-resource>
+  <rest name="Attachment Rest" i18n-name-key="attachment-rest.name" key="attachment-rest" path="/onlyoffice" version="1.0">
+    <description key="attachment-rest.description">The Attachment Rest Plugin</description>
+  </rest>
+  <web-panel name="OnlyOfficeLinks" i18n-name-key="only-office-links.name" key="only-office-links" location="atl.jira.view.issue.left.context" weight="500">
+    <description key="only-office-links.description">The OnlyOfficeLinks Plugin</description>
+    <context-provider class="ru.hlynov.oit.panel.OnlyOfficeLinks"/>
+    <resource name="view" type="velocity" location="templates/onlyoffice-editor-panel/only-office.vm"/>
+    <label key="only-office-links.title"/>
+    <context>jira.view.issue</context>
+  </web-panel>
+  <servlet name="Only Office Editor Servlet" i18n-name-key="only-office-editor-servlet.name" key="only-office-editor-servlet" class="ru.hlynov.oit.servlet.OnlyOfficeEditorServlet">
+    <description key="only-office-editor-servlet.description">The Only Office Editor Servlet Plugin</description>
+    <url-pattern>/onlyoffice/doceditor</url-pattern>
+  </servlet>
+  <servlet name="Only Office Save File Servlet" i18n-name-key="only-office-save-file-servlet.name" key="only-office-save-file-servlet" class="ru.hlynov.oit.servlet.OnlyOfficeSaveFileServlet">
+    <description key="only-office-save-file-servlet.description">The Only Office Save File Servlet Plugin</description>
+    <url-pattern>/onlyoffice/save</url-pattern>
+  </servlet>
+  <webwork1 key="onlyoffice-editor-setup" name="Onlyoffice Editor Setup" i18n-name-key="onlyoffice-editor-setup.name">
+    <description key="onlyoffice-editor-setup.description">The Onlyoffice Editor Setup Plugin</description>
+    <actions>
+      <action name="ru.hlynov.oit.setup.OnlyofficeEditorSetupAction" alias="OnlyofficeEditorSetupAction">
+        <view name="success.vm">/templates/onlyoffice-editor-setup/success.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+</atlassian-plugin>

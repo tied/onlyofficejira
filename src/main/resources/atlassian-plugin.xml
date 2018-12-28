@@ -17,6 +17,7 @@
     <resource type="download" name="onlyofficejira.js" location="/js/onlyofficejira.js"/>
     <resource type="download" name="images/" location="/images"/>
     <context>onlyofficejira</context>
+    <context>atl.general</context>
   </web-resource>
   <rest name="Attachment Rest" i18n-name-key="attachment-rest.name" key="attachment-rest" path="/onlyoffice" version="1.0">
     <description key="attachment-rest.description">The Attachment Rest Plugin</description>

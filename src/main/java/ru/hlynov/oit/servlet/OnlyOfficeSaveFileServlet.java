@@ -2,6 +2,7 @@ package ru.hlynov.oit.servlet;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.issue.attachment.Attachment;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.util.UserManager;
 
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.Scanner;
 import java.net.HttpURLConnection;
 import org.json.JSONArray;
@@ -31,7 +33,6 @@ public class OnlyOfficeSaveFileServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(OnlyOfficeSaveFileServlet.class);
 
     @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //super.doPost(req, resp);
         resp.setContentType("text/plain; charset=utf-8");
@@ -41,34 +42,41 @@ public class OnlyOfficeSaveFileServlet extends HttpServlet {
 
 
 
-        //String attachmentIdString = DocumentManager.ReadHash(vkey);
-
+        // здесь id
         String projectId = req.getParameter("projectId");
         String issueId = req.getParameter("issueId");
         String attachmentId = req.getParameter("attachmentId");
 
-        log.warn(" ============================================ ");
-        log.warn("req = " + req.getRequestURL().toString());
-        log.warn("arg = " + req.getQueryString());
-
-        log.warn(" ============================================ ");
-
-        log.warn(" ============================================ ");
-        log.warn("vkey = " + attachmentId);
-        log.warn(" ============================================ ");
+//        log.warn(" ============================================ ");
+//        log.warn("req = " + req.getRequestURL().toString());
+//        log.warn("arg = " + req.getQueryString());
+//
+//        log.warn(" ============================================ ");
+//
+//        log.warn(" ============================================ ");
+//        log.warn("vkey = " + attachmentId);
+//        log.warn(" ============================================ ");
 
 //        boolean result = processData(attachmentIdString, req.getInputStream());
 
-        // найти параметры, задачи, проекта и вложения
-        Issue issue = ComponentAccessor.getIssueManager().getIssueObject(Long.valueOf(issueId));
-        String issueKey = issue.getKey();
-        String projectKey = issue.getProjectObject().getKey();
+//        // найти параметры, задачи, проекта и вложения
+//        Issue issue = ComponentAccessor.getIssueManager().getIssueObject(Long.valueOf(issueId));
+//        String issueKey = issue.getKey();
+//        String projectKey = issue.getProjectObject().getKey();
 
 
+        // для отладки - потом удалить
         //String projectKey = req.getParameter("projectId");
+        Issue issue = ComponentAccessor.getIssueManager().getIssueObject(Long.valueOf(issueId));
+        Collection<Attachment> attachments = issue.getAttachments();
+        for (Attachment oneAtt : attachments) {
+            log.warn("from db name = " + oneAtt.getFilename() + " size " + String.valueOf(oneAtt.getFilesize()));
+        }
 
 
-        boolean result = processData(projectKey, issueKey, attachmentId, req.getInputStream());
+        boolean result = processData(projectId, issueId, attachmentId, req.getInputStream());
+//        boolean result = processData(projectKey, issueKey, attachmentId, req.getInputStream());
+
 
         String error = "1";
         if (result) {
@@ -88,8 +96,14 @@ public class OnlyOfficeSaveFileServlet extends HttpServlet {
     //    private boolean processData(String attachmentIdString, InputStream requestStream) throws IOException {
     private boolean processData(String projectId, String issueId, String attachmentId, InputStream requestStream) throws IOException {
 
-        String attachmentIdString = projectId + issueId + attachmentId;
-        log.warn("projectId = " + attachmentIdString + "   issueId = " + issueId + "   attachmentId = " + attachmentId);
+
+        // здесь key
+        // найти параметры, задачи, проекта и вложения
+        Issue issue = ComponentAccessor.getIssueManager().getIssueObject(Long.valueOf(issueId));
+        String issueKey = issue.getKey();
+        String projectKey = issue.getProjectObject().getKey();
+
+        String attachmentIdString = projectKey + issueKey + attachmentId;
 
         if (attachmentIdString.isEmpty()) {
             return false;
@@ -102,7 +116,6 @@ public class OnlyOfficeSaveFileServlet extends HttpServlet {
 
             String body = getBody(requestStream);
 
-//            log.info("body = " + body);
             log.warn("body = " + body);
 
             if (body.isEmpty()) {
@@ -154,7 +167,10 @@ public class OnlyOfficeSaveFileServlet extends HttpServlet {
 
                 InputStream stream = connection.getInputStream();
 
-                AttachmentUtil.saveAttachment(projectId, issueId, attachmentId, stream, size, user);
+
+                AttachmentUtil.saveAttachment(projectKey, issueKey, attachmentId, stream, size, user);
+                AttachmentUtil.setAttachmentSize(issueId,attachmentId, size);
+
             }
 
             return true;

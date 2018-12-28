@@ -1,24 +1,22 @@
 
 ##$webResourceManager.requireResourcesForContext("onlyofficejira")
 
-#set ($overdueDays = $daysAwayFromDueDate * -1)
-#if ($daysAwayFromDueDate)
-    #if ($daysAwayFromDueDate > 1)
-    <span style="font-weight: bold; color: green;">This issue is due in $daysAwayFromDueDate days.</span>
-    #elseif ($daysAwayFromDueDate == 1)
-    <span style="font-weight: bold; color: blue;">This is issue is due tomorrow.</span>
-    #elseif ($daysAwayFromDueDate == 0)
-    <span style="font-weight: bold; color: purple;">This issue is due today.</span>
-    #elseif ($daysAwayFromDueDate == -1)
-    <span style="font-weight: bold; color: #ff4500;">This issue was due yesterday!</span>
-    #elseif ($daysAwayFromDueDate < -1)
-    <span style="font-weight: bold; color: red;">This issue is overdue by $overdueDays days!</span>
-    #end
-#end
+
+##<div class="mod-content issue-drop-zone">
+##    <div duitype="dndattachment/dropzones/AttachmentsDropZone" class="issue-drop-zone -dui-type-parsed" data-upload-limit="10485760" data-upload-size="10.00 MB">
+##        <div class="issue-drop-zone__target"></div>
+##        <span class="issue-drop-zone__text">
+##            <span class="issue-drop-zone__drop-icon"> </span>
+##            Перенесите файлы, чтобы прикрепить, или
+##            <button type="button" class="issue-drop-zone__button"> обзор.</button>
+##            <input class="issue-drop-zone__file ignore-inline-attach" type="file" multiple="">
+##        </span>
+##    </div>
+##</div>
+
 
 
 <ol id="file_attachments" class="item-attachments">
-
 
 #foreach($oneAttach in $attachments)
 

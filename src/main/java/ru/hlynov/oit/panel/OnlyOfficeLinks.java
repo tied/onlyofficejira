@@ -11,6 +11,8 @@ import com.atlassian.jira.user.ApplicationUser;
 //import com.atlassian.plugin.web.model.WebPanel;
 import com.atlassian.jira.issue.attachment.Attachment;
 
+//import com.opensymphony.module.propertyset.ofbiz.OFBizPropertySet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +20,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.*;
 
-import static java.time.temporal.ChronoUnit.DAYS;
+//import static java.time.temporal.ChronoUnit.DAYS;
 
 public class OnlyOfficeLinks extends AbstractJiraContextProvider {
 
@@ -46,7 +48,12 @@ public class OnlyOfficeLinks extends AbstractJiraContextProvider {
 
             );
             attachmentParamsList.add(attachmentParams);
+
+
+//            log.warn("attach prop " + oneAttach.getFilename() + " = " + oneAttach.getProperties().getKeys().toString());
+
         }
+
 
 
         contextMap.put("attachments", attachmentParamsList);

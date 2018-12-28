@@ -42,18 +42,18 @@
     <div id="iframeEditor"></div>
 </div>
 
-<script type="text/javascript" language="javascript">
-    console.log("docserviceApiUrl");
-    console.log("${docserviceApiUrl}");
-    console.log("key");
-    console.log("${key}");
-    console.log("fileName");
-    console.log("${fileName}");
-    console.log("fileUrl");
-    console.log("${fileUrl}");
-    console.log("callbackUrl");
-    console.log("${callbackUrl}".replace(/&amp;/g, "&"));
-</script>
+##<script type="text/javascript" language="javascript">
+##    console.log("docserviceApiUrl");
+##    console.log("${docserviceApiUrl}");
+##    console.log("key");
+##    console.log("${key}");
+##    console.log("fileName");
+##    console.log("${fileName}");
+##    console.log("fileUrl");
+##    console.log("${fileUrl}");
+##    console.log("callbackUrl");
+##    console.log("${callbackUrl}".replace(/&amp;/g, "&"));
+##</script>
 
 <script type="text/javascript" src="${docserviceApiUrl}"></script>
 <script type="text/javascript" language="javascript">
@@ -74,7 +74,7 @@
             var fileTitle = "${fileName}".trim();
             var posExt = fileTitle.lastIndexOf(".");
             var fileType = 0 <= posExt ? fileTitle.substring(posExt + 1).trim().toLowerCase() : "";
-            if (fileType == "xlsx") {
+            if ((fileType == "xlsx") || (fileType == "xls")) {
                 documentTypeConfig = "spreadsheet";
             } else if (fileType == "pptx") {
                 documentTypeConfig = "presentation";

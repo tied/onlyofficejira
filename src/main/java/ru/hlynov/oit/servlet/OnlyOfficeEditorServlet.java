@@ -24,6 +24,7 @@ import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.auth.LoginUriProvider;
 
 import java.net.URI;
+import java.util.UUID;
 
 public class OnlyOfficeEditorServlet extends HttpServlet{
     private static final Logger log = LoggerFactory.getLogger(OnlyOfficeEditorServlet.class);
@@ -106,7 +107,8 @@ public class OnlyOfficeEditorServlet extends HttpServlet{
 
 //        context.put("jirabaseurl", ComponentAccessor.getApplicationProperties().getString(APKeys.JIRA_BASEURL));
 
-        context.put("key", req.getParameter("projectId").toString() + req.getParameter("issueId").toString() + req.getParameter("attachmentId").toString());
+//        context.put("key", req.getParameter("projectId").toString() + req.getParameter("issueId").toString() + req.getParameter("attachmentId").toString());
+        context.put("key", UUID.randomUUID().toString());
 
 
         String callbackURL = ComponentAccessor.getApplicationProperties().getString(APKeys.JIRA_BASEURL)

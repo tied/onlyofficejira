@@ -1,0 +1,110 @@
+{namespace JIRA.Templates.DnDAttachmentPlugin}
+
+/**
+ * Template for indicator for JIRA DnD Attachment Plugin
+ */
+{template .UploadProgressBar}
+    <div class="upload-progress-bar__thumbnail"> </div>
+    <span class="upload-progress-bar__file-name"> </span>
+    <span class="upload-progress-bar__file-size"> </span>
+    <div class="upload-progress-bar__progress-bar">
+        <span class="upload-progress-bar__bar"> </span>
+    </div>
+    <div class="upload-progress-bar__control">
+        <button type="button" class="aui-button aui-button-subtle aui-button-compact"><span class="aui-icon aui-icon-small aui-iconfont-close-dialog">{getText('dnd.attachment.upload.cancel')}</span></button>
+    </div>
+    <div class="upload-progress-bar__error-message">
+    </div>
+{/template}
+
+/**
+ * Template for attachments section progress bar
+ * @param isImageType
+ */
+{template .AttachmentsUploadProgressBar}
+    {if $isImageType}
+        <div class="upload-progress-bar__thumbnail">
+            <div class="upload-progress-bar__progress-bar">
+                <span class="upload-progress-bar__bar"> </span>
+            </div>
+        </div>
+        <dl>
+            <dt>
+                <span class="upload-progress-bar__file-name"> </span>
+            </dt>
+            <dd class="upload-progress-bar__file-size"> </dd>
+            <dd class="upload-progress-bar__upload-control">
+                <span>{getText('dnd.attachment.cancel')}</span>
+            </dd>
+            <dd class="upload-progress-bar__error-message">
+            </dd>
+            <dd class="attachment-date"><time class="livestamp" /></dd>
+        </dl>
+    {else}
+        <div class="attachment-thumb upload-progress-bar__thumbnail">
+        </div>
+        <dl>
+            <dt class="attachment-title upload-progress-bar__file-name">
+            </dt>
+            <dd class="upload-progress-bar__upload-control">
+                <span>{getText('dnd.attachment.cancel')}</span>
+            </dd>
+            <dd class="attachment-size">
+                <span class="upload-progress-bar__file-size"> </span>
+                <div class="upload-progress-bar__progress-bar">
+                    <span class="upload-progress-bar__bar"> </span>
+                </div>
+            </dd>
+            <dd class="attachment-author"> </dd>
+            <dd class="attachment-date"><time class="livestamp" /></dd>
+        </dl>
+    {/if}
+{/template}
+
+
+/**
+ *
+ */
+{template .TempUploadProgressBar}
+    <div class="temp-upload-progress-bar__parent-container temp-upload-progress-bar__uploading">
+        <div class="temp-upload-progress-bar__container">
+            <div class="upload-progress-bar__thumbnail"/>
+            <div class="upload-progress-bar__progress-bar">
+                <span class="upload-progress-bar__bar"> </span>
+            </div>
+            <div class="upload-progress-bar__error">
+                <div class="upload-progress-bar__error-indicator">
+                    <span class="aui-icon aui-icon-large aui-iconfont-error">{getText('dnd.attachment.upload.error')}</span>
+                </div>
+                <div class="upload-progress-bar__error-text">{getText('dnd.attachment.upload.failed')}</div>
+            </div>
+            <div class="upload-progress-bar__upload-mask"/>
+            <div class="upload-progress-bar__control">
+                <button type="button" class="aui-button aui-button-subtle aui-button-compact">
+                    <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">
+                        <div class="button-text" aria-label="{getText('dnd.attachment.upload.cancel')} "></div>
+                        <div class="file-name"></div>
+                        <div class="error-message"></div>
+                    </span>
+                </button>
+            </div>
+            <div class="upload-progress-bar__progress-bar">
+                <span class="upload-progress-bar__bar"> </span>
+            </div>
+        </div>
+        <div class="upload-progress-bar_file-name-container">
+            <span class="upload-progress-bar__file-name"></span>
+        </div>
+    </div>
+{/template}
+
+
+/**
+ * Template for link shown in successful uploads message
+ * @param issueLink
+ * @param issueKey
+ * @param issueSummary
+ */
+{template .SuccessMessageLink}
+    <a href="{$issueLink}">{$issueKey} - {$issueSummary}</a>
+{/template}

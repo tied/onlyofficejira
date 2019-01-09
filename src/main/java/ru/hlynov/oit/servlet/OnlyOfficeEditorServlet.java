@@ -9,6 +9,8 @@ import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.atlassian.jira.security.login.LoginManager;
+
 import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;

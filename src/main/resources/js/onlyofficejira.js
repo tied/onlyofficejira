@@ -16,6 +16,41 @@ JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, context, reason) {
 
     var ooAddRow = function (attElem) {
         console.log(attElem);
+
+        var rowTemplate = AJS.$("div#attachment_item_template").html();
+        var copyElem = AJS.$(AJS.$("li.attachment-content")[0]);
+
+        // __attachId__
+        var attachId = copyElem.find("div.attachment-delete a").attr("id").substring(4);
+        // __attachFileName__
+        var attachFileName = copyElem.find("a.attachment-title").text();
+        // __attachFileSize__
+        var attachFileSize = copyElem.find("dd.attachment-size").text();
+        // __attachCreated__
+        var attachCreated = copyElem.find("dd.attachment-date time").text();
+
+        console.log("rowTemplate");
+        console.log(rowTemplate);
+
+
+        console.log("=========== find vars ===========");
+        console.log("__attachId__");
+        console.log(attachId);
+        console.log("__attachFileName__");
+        console.log(attachFileName);
+        console.log("__attachFileSize__");
+        console.log(attachFileSize);
+        console.log("__attachCreated__");
+        console.log(attachCreated);
+
+        rowTemplate.replace(/__attachId__/g, attachId);
+        rowTemplate.replace(/__attachFileName__/g, attachFileName);
+        rowTemplate.replace(/__attachFileSize__/g, attachFileSize);
+        rowTemplate.replace(/__attachCreated__/g, attachCreated);
+
+        console.log("rowTemplate with replace");
+        console.log(rowTemplate);
+
         return true;
     }
 

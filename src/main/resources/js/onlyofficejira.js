@@ -14,11 +14,11 @@ JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, context, reason) {
     //     }
     // }
 
-    var ooAddRow = function (attElem) {
-        console.log(attElem);
+    var ooAddRow = function (copyElem) {
+        //console.log(attElem);
 
         var rowTemplate = AJS.$("div#attachment_item_template").html();
-        var copyElem = AJS.$(AJS.$("li.attachment-content")[0]);
+        //var copyElem = AJS.$(AJS.$("li.attachment-content")[0]);
 
         // __attachId__
         var attachId = copyElem.find("div.attachment-delete a").attr("id").substring(4);
@@ -27,7 +27,7 @@ JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, context, reason) {
         // __attachFileSize__
         var attachFileSize = copyElem.find("dd.attachment-size").text();
         // __attachCreated__
-        var attachCreated = copyElem.find("dd.attachment-date time").text();
+        var attachCreated = copyElem.find("dd.attachment-date time").attr("datetime");
 
         console.log("rowTemplate");
         console.log(rowTemplate);
@@ -43,13 +43,15 @@ JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, context, reason) {
         console.log("__attachCreated__");
         console.log(attachCreated);
 
-        rowTemplate.replace(/__attachId__/g, attachId);
-        rowTemplate.replace(/__attachFileName__/g, attachFileName);
-        rowTemplate.replace(/__attachFileSize__/g, attachFileSize);
-        rowTemplate.replace(/__attachCreated__/g, attachCreated);
+        rowTemplate = rowTemplate.replace(/__attachId__/g, attachId);
+        rowTemplate = rowTemplate.replace(/__attachFileName__/g, attachFileName);
+        rowTemplate = rowTemplate.replace(/__attachFileSize__/g, attachFileSize);
+        rowTemplate = rowTemplate.replace(/__attachCreated__/g, attachCreated);
 
         console.log("rowTemplate with replace");
         console.log(rowTemplate);
+
+        AJS.$("ol#oo_file_attachments").append(rowTemplate);
 
         return true;
     }
@@ -94,12 +96,81 @@ JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, context, reason) {
                     // добавлять будем через функцию
                     ooAddRow(AJS.$(AJS.$("ol#" + refContent.id + " li")[i]));
                 }
-
-
             }
-
-
         }
     }
-
 });
+
+
+AJS.$(function() {
+    // AJS.$("#warning-dialog-show-button").click(function (e) {
+    // AJS.$("div button.aui-button").click(function (e) {
+    //
+    //     console.log(this);
+    //     console.log(AJS.$(this).attr("attachId"));
+    //
+    //     AJS.$("#demo-warning-dialog header.aui-dialog2-header h2").text("Удалить вложение: " + AJS.$(this).attr("attachName") + " ?");
+    //     AJS.$("#demo-warning-dialog input[name='id']").val(AJS.$(this).attr("projectId"));
+    //     AJS.$("#demo-warning-dialog input[name='deleteAttachmentId']").val(AJS.$(this).attr("attachId"));
+    //     AJS.$("#demo-warning-dialog input[name='atl_token']").val(AJS.$("meta[name=atlassian-token]").attr("content"));
+    //
+    //
+    //
+    //     e.preventDefault();
+    //
+    //
+    //     AJS.dialog2("#demo-warning-dialog").show();
+    // });
+    //
+    // AJS.$(document).on("click", "#demo-warning-dialog button", function (e) {
+    //     e.preventDefault();
+    //     AJS.dialog2("#demo-warning-dialog").hide();
+    // });
+
+    AJS.$("div button.aui-button").click(function (e) {
+        e.preventDefault();
+        AJS.$("#demo-warning-dialog").attr("attachid", AJS.$(this).attr("attachId"));
+        AJS.dialog2("#demo-warning-dialog").show();
+    });
+
+
+    AJS.$(document).on("click", "#demo-warning-dialog button", function (e) {
+        e.preventDefault();
+        AJS.dialog2("#demo-warning-dialog").hide();
+
+        var rest_url = AJS.params.baseURL + "/rest/api/2/attachment/" + AJS.$("#demo-warning-dialog").attr("attachId");
+
+        if (AJS.$(this).attr("id") == "warning-dialog-confirm") {
+
+            AJS.$.ajax({
+                // url:  AJS.params.baseURL + "/rest/api/2/attachment/" + AJS.$(this).attr("attachId"),
+                url:  rest_url,
+                type: 'DELETE',
+                success: function(result) {
+                    // удалим строку
+                    // console.log("=============");
+                    console.log("удачно");
+                    // console.log(AJS.$(element).parent().parent());
+                    // AJS.$(element).parent().parent().remove();
+                },
+                error: function(e) {
+                    console.log("ошибка");
+                    // Do something with the result
+                    // AJS.messages.error("#aui-message-bar", {
+                    //     title: 'Ошибка',
+                    //     body: e
+                    // });
+                }
+            });
+
+
+
+
+            console.log("удаление");
+        }
+
+
+    })
+
+
+})

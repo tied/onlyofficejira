@@ -48,6 +48,10 @@ JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, context, reason) {
     if (reason === JIRA.CONTENT_ADDED_REASON.panelRefreshed) {
         var refContent = context[0];
 
+        if (!refContent) {
+            return true;
+        }
+
         console.log(" ++ ============================");
         // console.log(refContent);
         // console.log(refContent.tagName);

@@ -1,7 +1,6 @@
 
 $webResourceManager.requireResourcesForContext("onlyofficejira")
 
-
 ##<div class="mod-content issue-drop-zone">
 ##    <div duitype="dndattachment/dropzones/AttachmentsDropZone" class="issue-drop-zone -dui-type-parsed" data-upload-limit="10485760" data-upload-size="10.00 MB">
 ##        <div class="issue-drop-zone__target"></div>
@@ -66,39 +65,6 @@ $webResourceManager.requireResourcesForContext("onlyofficejira")
 
 
 ## здесь разместим блок со скриптом
-<script>
-
-    AJS.$(function() {
-
-        // var delAttachAlert = function (e) {
-        //     AJS.$("#demo-warning-dialog").attr("attachid", AJS.$(this).attr("attachId"));
-        //     AJS.dialog2("#demo-warning-dialog").show();
-        // }
-
-        AJS.$("div button.aui-button").click(function (e) {
-            e.preventDefault();
-            AJS.$("#demo-warning-dialog").attr("attachid", AJS.$(this).attr("attachId"));
-            AJS.dialog2("#demo-warning-dialog").show();
-        });
-
-
-
-        AJS.$(document).on("click", "#demo-warning-dialog button", function (e) {
-            e.preventDefault();
-            AJS.dialog2("#demo-warning-dialog").hide();
-
-            var rest_url = AJS.params.baseURL + "/rest/api/2/attachment/" + AJS.$("#demo-warning-dialog").attr("attachId");
-
-        })
-
-
-
-
-    })
-
-
-</script>
-
 
 
 <ol id="oo_file_attachments" class="item-attachments">

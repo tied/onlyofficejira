@@ -1,19 +1,6 @@
 
 $webResourceManager.requireResourcesForContext("onlyofficejira")
 
-##<div class="mod-content issue-drop-zone">
-##    <div duitype="dndattachment/dropzones/AttachmentsDropZone" class="issue-drop-zone -dui-type-parsed" data-upload-limit="10485760" data-upload-size="10.00 MB">
-##        <div class="issue-drop-zone__target"></div>
-##        <span class="issue-drop-zone__text">
-##            <span class="issue-drop-zone__drop-icon"> </span>
-##            Перенесите файлы, чтобы прикрепить, или
-##            <button type="button" class="issue-drop-zone__button"> обзор.</button>
-##            <input class="issue-drop-zone__file ignore-inline-attach" type="file" multiple="">
-##        </span>
-##    </div>
-##</div>
-
-
 
 ## шаблон добавляемой строки внутри дива
 <div id="attachment_item_template" style="display: none">
@@ -24,28 +11,31 @@ $webResourceManager.requireResourcesForContext("onlyofficejira")
             </a>
         </div>
 
-        <div style="float: left;width: 200px; word-wrap: normal;">
+        <div style="float: left;width: 200px; word-wrap: break-word;">
             <a href="$jirabaseurl/secure/attachment/__attachId__/__attachFileName__" title="__attachFileName__" draggable="false" >__attachFileName__</a>
         </div>
-        <div class="attachment-size" style="float: left;width: 74px;">
+        <div class="attachment-size" style="float: left;width: 74px; font-size: 12px;">
             __attachFileSize__
         </div>
-        <div class="attachment-date" style="float: left;width: 166px;">
-            <time class="livestamp" datetime="__attachCreated__"></time>
+        <div class="attachment-date" style="float: left;width: 166px; font-size: 12px;">
+##            <time class="livestamp" datetime="__attachCreated__"></time>
+            <time>только что</time>
         </div>
         <div style="float: left;width: 35px;">
             <a target="_blank" href="$jirabaseurl/plugins/servlet/onlyoffice/doceditor?projectId=$projectId&issueId=$issueId&attachmentId=__attachId__&fileurl=$jirabaseurl/rest/onlyoffice/1.0/file/get/$projectId/$issueId/__attachId__/__attachFileName__&filename=__attachFileName__">
                 <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
             </a>
         </div>
-        <div class="attachment-delete" style="float: right;">
-            <a title="Удалить вложение" id="del___attachId__" href="$jirabaseurl/secure/DeleteAttachment!default.jspa?id=$issueid&amp;deleteAttachmentId=__attachId__&amp;from=issue"><span class="icon-default aui-icon aui-icon-small aui-iconfont-delete">Удалить вложение</span></a>
+        <div style="float: right;">
+            <a class="oodelclass" title="Удалить вложение" href="#" projectId="$projectId" issueId="$issueId" attachId="$oneAttach.getId()" attachName="$oneAttach.getFileName()">
+                <span class="icon-default aui-icon aui-icon-small aui-iconfont-delete">Удалить вложение</span>
+            </a>
         </div>
     </li>
 </div>
 
 ## диалог удаления элемента
-<section id="demo-warning-dialog" class="aui-dialog2 aui-dialog2-medium aui-layer" role="dialog" aria-hidden="true" attachId="">
+<section id="delete-warning-dialog" class="aui-dialog2 aui-dialog2-medium aui-layer" role="dialog" aria-hidden="true" attachId="">
     <header class="aui-dialog2-header">
         <h2 class="aui-dialog2-header-main">Confirm you want to delete this thing</h2>
         <a class="aui-dialog2-header-close">
@@ -53,7 +43,10 @@ $webResourceManager.requireResourcesForContext("onlyofficejira")
         </a>
     </header>
     <div class="aui-dialog2-content">
-        <p>If you do this, there's no going back. Are you certain that you want this thing to be gone forever?</p>
+        <div class="aui-message info">
+            <span class="aui-icon icon-info"></span>
+            <p>Вы уверены, что хотите удалить это вложение?</p>
+        </div>
     </div>
     <footer class="aui-dialog2-footer">
         <div class="aui-dialog2-footer-actions">
@@ -78,13 +71,13 @@ $webResourceManager.requireResourcesForContext("onlyofficejira")
                 </a>
             </div>
 
-            <div style="float: left;width: 200px; word-wrap: normal;">
+            <div style="float: left;width: 200px; word-wrap: break-word;">
                 <a href="$jirabaseurl/secure/attachment/$oneAttach.getId()/$oneAttach.getFileName()" title="$oneAttach.getFileName()" draggable="false" >$oneAttach.getFileName()</a>
             </div>
-            <div class="attachment-size" style="float: left;width: 74px;">
-                $oneAttach.getFileSize()
+            <div class="attachment-size" style="float: left; width: 74px; font-size: 12px;">
+                $oneAttach.getFileSizeDisplay()
             </div>
-            <div class="attachment-date" style="float: left;width: 166px;">
+            <div class="attachment-date" style="float: left;width: 166px; font-size: 12px;">
                 <time class="livestamp" datetime="$oneAttach.getCreated()"></time>
             </div>
             <div style="float: left;width: 35px;">
@@ -93,16 +86,17 @@ $webResourceManager.requireResourcesForContext("onlyofficejira")
                 </a>
             </div>
 
-
-            <div>
-                <button projectId="$projectId" issueId="$issueId" attachId="$oneAttach.getId()" attachName="$oneAttach.getFileName()" class="aui-button">Show warning dialog</button>
+            <div style="float: right;">
+                <a class="oodelclass" title="Удалить вложение" href="#" projectId="$projectId" issueId="$issueId" attachId="$oneAttach.getId()" attachName="$oneAttach.getFileName()">
+                    <span class="icon-default aui-icon aui-icon-small aui-iconfont-delete">Удалить вложение</span>
+                </a>
             </div>
 
-
-            <div class="attachment-delete" style="float: right;">
-                <a title="Удалить вложение" id="del_$oneAttach.getId()" href="$jirabaseurl/secure/DeleteAttachment!default.jspa?id=$issueid&amp;deleteAttachmentId=$oneAttach.getId()&amp;from=issue"><span class="icon-default aui-icon aui-icon-small aui-iconfont-delete">Удалить вложение</span></a>
-            </div>
-
+##            <div class="attachment-delete" style="float: left;">
+##                <a title="Удалить вложение" id="del_$oneAttach.getId()" href="$jirabaseurl/secure/DeleteAttachment!default.jspa?id=$issueid&amp;deleteAttachmentId=$oneAttach.getId()&amp;from=issue">
+##                    <span class="icon-default aui-icon aui-icon-small aui-iconfont-delete">Удалить вложение</span>
+##                </a>
+##            </div>
         </li>
 
 #end

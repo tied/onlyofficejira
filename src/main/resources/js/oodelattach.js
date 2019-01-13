@@ -1,26 +1,48 @@
 
-JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, context, reason) {
-    if (reason !== JIRA.CONTENT_ADDED_REASON.panelRefreshed) {
+JIRA.bind(JIRA.Events.ISSUE_REFRESHED, function() {
 
-        AJS.$("div button.aui-button").click(function (e) {
-            e.preventDefault();
-            AJS.$("#demo-warning-dialog").attr("attachid", AJS.$(this).attr("attachId"));
-            AJS.dialog2("#demo-warning-dialog").show();
+    console.log(" ======= from JIRA.Events.ISSUE_REFRESHED");
 
-            var currentdate = new Date();
-            var datetime = "Last Sync: " + currentdate.getDay() + "/"+currentdate.getMonth()
-                + "/" + currentdate.getFullYear() + " @ "
-                + currentdate.getHours() + ":"
-                + currentdate.getMinutes() + ":" + currentdate.getSeconds();
 
-            console.log(" ======= " + datetime);
-        });
-    };
+    AJS.$("div button.aui-button").click(function (e) {
+        e.preventDefault();
+        AJS.$("#demo-warning-dialog").attr("attachid", AJS.$(this).attr("attachId"));
+        AJS.dialog2("#demo-warning-dialog").show();
+
+        var currentdate = new Date();
+        var datetime = "Last Sync: " + currentdate.getDay() + "/"+currentdate.getMonth()
+            + "/" + currentdate.getFullYear() + " @ "
+            + currentdate.getHours() + ":"
+            + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+
+        console.log(" ======= " + datetime);
+    });
 });
 
 
-// AJS.toInit(function() {
-AJS.$(function() {
+//
+// JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, context, reason) {
+//     if (reason !== JIRA.CONTENT_ADDED_REASON.panelRefreshed) {
+//
+//         AJS.$("div button.aui-button").click(function (e) {
+//             e.preventDefault();
+//             AJS.$("#demo-warning-dialog").attr("attachid", AJS.$(this).attr("attachId"));
+//             AJS.dialog2("#demo-warning-dialog").show();
+//
+//             var currentdate = new Date();
+//             var datetime = "Last Sync: " + currentdate.getDay() + "/"+currentdate.getMonth()
+//                 + "/" + currentdate.getFullYear() + " @ "
+//                 + currentdate.getHours() + ":"
+//                 + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+//
+//             console.log(" ======= " + datetime);
+//         });
+//     };
+// });
+
+
+AJS.toInit(function() {
+// AJS.$(function() {
     // AJS.$("#warning-dialog-show-button").click(function (e) {
     // AJS.$("div button.aui-button").click(function (e) {
     //
@@ -40,10 +62,10 @@ AJS.$(function() {
     //     AJS.dialog2("#demo-warning-dialog").show();
     // });
     //
-    // AJS.$(document).on("click", "#demo-warning-dialog button", function (e) {
-    //     e.preventDefault();
-    //     AJS.dialog2("#demo-warning-dialog").hide();
-    // });
+    AJS.$(document).on("click", "#demo-warning-dialog button", function (e) {
+        e.preventDefault();
+        AJS.dialog2("#demo-warning-dialog").hide();
+    });
 
 
 

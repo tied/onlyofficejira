@@ -8,7 +8,7 @@ public class AttachmentParams {
     private String author;
     private Timestamp created;
     private Long id;
-
+    private String fileSizeDisplay;
 
     public AttachmentParams(String fileName, Long fileSize, String author, Timestamp created, Long id) {
         this.fileName = fileName;
@@ -16,6 +16,7 @@ public class AttachmentParams {
         this.author = author;
         this.created = created;
         this.id = id;
+        this.fileSizeDisplay = getFileSizeDisplayFromLong(fileSize);
 
     }
 
@@ -33,6 +34,7 @@ public class AttachmentParams {
 
     public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
+        this.fileSizeDisplay = getFileSizeDisplayFromLong(fileSize);
     }
 
     public String getAuthor() {
@@ -57,5 +59,21 @@ public class AttachmentParams {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getFileSizeDisplay() {
+        return fileSizeDisplay;
+    }
+
+    private String getFileSizeDisplayFromLong(Long fileSize) {
+        if (fileSize % 1000 > 0) {
+            return String.valueOf((Long)(fileSize / 1000)) + " kB";
+        }
+
+        if (fileSize % 1000000 > 0) {
+            return String.valueOf((Long)(fileSize / 1000000)) + " MB";
+        }
+
+        return String.valueOf(fileSize);
     }
 }

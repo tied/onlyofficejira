@@ -71,26 +71,32 @@ $webResourceManager.requireResourcesForContext("onlyofficejira")
                 </a>
             </div>
 
-            <div style="float: left;width: 200px; word-wrap: break-word;">
+            <div style="float: left;width: calc(100% - 250px); word-wrap: break-word;">
                 <a href="$jirabaseurl/secure/attachment/$oneAttach.getId()/$oneAttach.getFileName()" title="$oneAttach.getFileName()" draggable="false" >$oneAttach.getFileName()</a>
-            </div>
-            <div class="attachment-size" style="float: left; width: 74px; font-size: 12px;">
-                $oneAttach.getFileSizeDisplay()
-            </div>
-            <div class="attachment-date" style="float: left;width: 166px; font-size: 12px;">
-                <time class="livestamp" datetime="$oneAttach.getCreated()"></time>
-            </div>
-            <div style="float: left;width: 35px;">
-                <a target="_blank" href="$jirabaseurl/plugins/servlet/onlyoffice/doceditor?projectId=$projectId&issueId=$issueId&attachmentId=$oneAttach.getId()&fileurl=$jirabaseurl/rest/onlyoffice/1.0/file/get/$projectId/$issueId/$oneAttach.getId()/$oneAttach.getFileName()&filename=$oneAttach.getFileName()">
-                    <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
-                </a>
             </div>
 
             <div style="float: right;">
-                <a class="oodelclass" title="Удалить вложение" href="#" projectId="$projectId" issueId="$issueId" attachId="$oneAttach.getId()" attachName="$oneAttach.getFileName()">
-                    <span class="icon-default aui-icon aui-icon-small aui-iconfont-delete">Удалить вложение</span>
-                </a>
+
+                <div class="attachment-size" style="float: left; width: 56px; font-size: 12px;">
+                    $oneAttach.getFileSizeDisplay()
+                </div>
+                <div class="attachment-date" style="float: left;width: 96px; font-size: 12px;">
+                    <time class="livestamp" datetime="$oneAttach.getCreated()"></time>
+                </div>
+                <div style="float: left; width: 35px;">
+                    <a target="_blank" href="$jirabaseurl/plugins/servlet/onlyoffice/doceditor?projectId=$projectId&issueId=$issueId&attachmentId=$oneAttach.getId()&fileurl=$jirabaseurl/rest/onlyoffice/1.0/file/get/$projectId/$issueId/$oneAttach.getId()/$oneAttach.getFileName()&filename=$oneAttach.getFileName()">
+                        <span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span>
+                    </a>
+                </div>
+
+                <div style="float: left; font-size: 25px;">
+                    <a class="oodelclass" title="Удалить вложение" href="#" projectId="$projectId" issueId="$issueId" attachId="$oneAttach.getId()" attachName="$oneAttach.getFileName()">
+                        <span class="icon-default aui-icon aui-icon-small aui-iconfont-delete">Удалить вложение</span>
+                    </a>
+                </div>
+
             </div>
+
 
 ##            <div class="attachment-delete" style="float: left;">
 ##                <a title="Удалить вложение" id="del_$oneAttach.getId()" href="$jirabaseurl/secure/DeleteAttachment!default.jspa?id=$issueid&amp;deleteAttachmentId=$oneAttach.getId()&amp;from=issue">

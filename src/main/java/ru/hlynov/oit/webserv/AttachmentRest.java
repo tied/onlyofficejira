@@ -9,7 +9,9 @@ import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
@@ -62,11 +64,16 @@ public class AttachmentRest {
 //                                  @QueryParam("issueId") String issueId,
 //                                  @QueryParam("attachmentId") String attachmentId,
 //                                  @QueryParam("filename") String filename)
-    public Response getAttachment(@PathParam("projectId") String projectId,
+    public Response getAttachment(@Context HttpServletRequest request,
+                                  @PathParam("projectId") String projectId,
                                   @PathParam("issueId") String issueId,
                                   @PathParam("attachmentId") String attachmentId,
                                   @PathParam("filename") String filename)
     {
+
+        log.warn("remote addr: " + request.getRemoteAddr());
+        log.warn("remote name: " + request.getRemoteHost());
+        log.warn("remote port: " + String.valueOf(request.getRemotePort()));
 
 //        File rootDir = new File(ComponentAccessor.getAttachmentPathManager().getAttachmentPath());
 

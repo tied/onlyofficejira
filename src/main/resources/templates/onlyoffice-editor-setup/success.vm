@@ -1,1 +1,64 @@
-<h1>success.vm</h1>
+<html>
+<head>
+    <meta name="decorator" content="atl.admin"/>
+    <meta name="admin.active.section" content="admin_plugins_menu/onlyoffice-section"/>
+##    $webResourceManager.requireResource("com.atlassian.auiplugin:aui-buttons")
+##    $webResourceManager.requireResource("com.atlassian.auiplugin:aui-select2")
+##    $webResourceManager.requireResourcesForContext("com.atlassian.auiplugin:message")
+##    $webResourceManager.requireResourcesForContext("com.atlassian.auiplugin:aui-experimental-iconfont")
+##    $webResourceManager.requireResourcesForContext("groupbosses")
+</head>
+
+    <body class="aui">
+        <h2>Настройка редактора OnlyOffice Document Editor</h2>
+        <form class="aui">
+            <div class="field-group">
+                <label for="comment-email">
+                   Сервер<span class="aui-icon icon-required">(required)</span>
+                </label>
+                <input class="text medium-field" type="text" name="servername" placeholder="www.hostname.xxx">
+                <div class="description">
+                    Имя сервера (или ip адресс) где находится редактор
+                </div>
+            </div>
+            <div class="buttons-container">
+                <div class="buttons">
+                    <input class="button submit" type="submit" value="Сохранить" id="comment-save-button">
+##                    <a class="cancel" href="#">Cancel</a>
+                </div>
+            </div>
+        </form>
+
+        <h2>Настройки сети</h2>
+
+        <div class="aui-group">
+            <div class="aui-item">
+                Implementation tips 1
+                Add an aui-group for each discrete group of content - by default, they behave as rows.
+                Add as many aui-item elements to each group as you want - by default, they behave as columns.
+                Do not style the groups and items directly - treat them strictly as containers to divide up areas of the page (see notes below).
+                Setting item widths:
+
+                By default, items will be distributed evenly. Add two, they'll be 50% each; add four, 25% each; etc.
+                If you set one item to a fixed width, the remaining items will divide the remaining space evenly amongst themselves.
+                For simple groups, we recommend using a class on the aui-group, with first- last- and nth-child selectors.
+            </div>
+        </div>
+
+        <h2>Рабочий dockerfile</h2>
+
+        <div class="aui-group">
+            <div class="aui-item">
+                Implementation tips 2
+                Add an aui-group for each discrete group of content - by default, they behave as rows.
+                Add as many aui-item elements to each group as you want - by default, they behave as columns.
+                Do not style the groups and items directly - treat them strictly as containers to divide up areas of the page (see notes below).
+                Setting item widths:
+
+                By default, items will be distributed evenly. Add two, they'll be 50% each; add four, 25% each; etc.
+                If you set one item to a fixed width, the remaining items will divide the remaining space evenly amongst themselves.
+                For simple groups, we recommend using a class on the aui-group, with first- last- and nth-child selectors.
+            </div>
+        </div>
+    </body>
+</html>

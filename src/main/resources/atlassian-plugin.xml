@@ -46,8 +46,19 @@
     <description key="onlyoffice-editor-setup.description">The Onlyoffice Editor Setup Plugin</description>
     <actions>
       <action name="ru.hlynov.oit.setup.OnlyofficeEditorSetupAction" alias="OnlyofficeEditorSetupAction">
-        <view name="success.vm">/templates/onlyoffice-editor-setup/success.vm</view>
+        <view name="success">/templates/onlyoffice-editor-setup/success.vm</view>
       </action>
     </actions>
   </webwork1>
+  <web-section name="onlyoffice-section" i18n-name-key="onlyoffice-section.name" key="onlyoffice-section" location="admin_plugins_menu" weight="1000">
+    <description key="onlyoffice.description">The onlyoffice section Plugin</description>
+    <!--<label key="onlyoffice-section.label"/>-->
+    <label key="OnlyOffice"/>
+  </web-section>
+  <web-item name="onlyoffice-link" i18n-name-key="onlyofficelink.name" key="onlyofficelink" section="admin_plugins_menu/onlyoffice-section" weight="1000">
+    <description key="groupbosseslink.description">The onlyoffice link Plugin</description>
+    <!--<label key="onlyofficelink.label"></label>-->
+    <label key="Настройка редактора"></label>
+    <link linkId="onlyofficelink-link">/secure/OnlyofficeEditorSetupAction!default.jspa</link>
+  </web-item>
 </atlassian-plugin>

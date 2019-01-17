@@ -17,23 +17,28 @@ JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, context, reason) {
         // __attachCreated__
         var attachCreated = copyElem.find("dd.attachment-date time").attr("datetime");
 
-        // console.log("rowTemplate");
-        // console.log(rowTemplate);
+        var fileExt = attachFileName.substring(attachFileName.lastIndexOf(".") + 1);
+        //можно еще так подтянуть расширение из имени
+        //filename.split('.').pop();
 
-        // console.log("=========== find vars ===========");
-        // console.log("__attachId__");
-        // console.log(attachId);
-        // console.log("__attachFileName__");
-        // console.log(attachFileName);
-        // console.log("__attachFileSize__");
-        // console.log(attachFileSize);
-        // console.log("__attachCreated__");
-        // console.log(attachCreated);
+        console.log("расширение файла = " + fileExt);
 
+        // замена ссылки на редактирование для определенных файлов
+        if (fileExt == "doc" || fileExt == "docx" || fileExt == "xls" || fileExt == "xlsx") {
+            console.log("расширение файла сработало");
+            rowTemplate = rowTemplate.replace(/__attachEditLink__/g, AJS.$("div#attachment_edit_template").html());
+        } else {
+            console.log("расширение файла не сработало");
+            rowTemplate = rowTemplate.replace(/__attachEditLink__/g, AJS.$("div#attachment_noedit_template").html());
+        }
+
+        // замена все остальных шаблонов
         rowTemplate = rowTemplate.replace(/__attachId__/g, attachId);
         rowTemplate = rowTemplate.replace(/__attachFileName__/g, attachFileName);
         rowTemplate = rowTemplate.replace(/__attachFileSize__/g, attachFileSize);
         rowTemplate = rowTemplate.replace(/__attachCreated__/g, attachCreated);
+
+
 
         // console.log("rowTemplate with replace");
         // console.log(rowTemplate);
@@ -130,7 +135,7 @@ JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, context, reason) {
                 type: 'DELETE',
                 success: function (result) {
                     // удалим строку
-                    var ooAttArr =[];
+                    //var ooAttArr =[];
                     var arrObj = AJS.$("ol#oo_file_attachments li");
                     var arrSize = arrObj.size();
                     for (var i = 0; i < arrSize; i++) {
@@ -138,7 +143,25 @@ JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, context, reason) {
                             AJS.$(arrObj[i]).remove();
                         }
                     }
+
                     // console.log("удачно");
+                    // так же нужно удалить вложения из основного набора, чтобы избежать рассинхрона
+                    arrObj = AJS.$("ol#attachment_thumbnails li");
+                    if (arrObj.size() == 0) {
+                        arrObj = AJS.$("ol#file_attachments li");
+                    }
+
+                    arrSize = arrObj.size();
+                    var findObj;
+                    for (var i = 0; i < arrSize; i++) {
+                        findObj = AJS.$(arrObj[i]).find(".attachment-delete a");
+                        if (findObj.size() == 1) {
+                            if (AJS.$(findObj[i]).attr("id") == "del_" + attachId) {
+                                AJS.$(arrObj[i]).remove();
+                            }
+                        }
+                   }
+
                 },
                 error: function (eee) {
                     console.log("ошибка");

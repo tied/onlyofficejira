@@ -51,7 +51,6 @@ public class OnlyOfficeEditorServlet extends HttpServlet{
 //        resp.setContentType("text/html");
 //        resp.getWriter().write("<html><body>Hello World</body></html>");
 
-
         String username = userManager.getRemoteUsername(req);
 //        if (username == null || !userManager.isSystemAdmin(username))
         if (username == null)
@@ -60,9 +59,7 @@ public class OnlyOfficeEditorServlet extends HttpServlet{
             return;
         }
 
-
         Map<String, Object> context = Maps.newHashMap();
-
 
         context.put("docserviceApiUrl", "http://localhost/web-apps/apps/api/documents/api.js");
 //        context.put("key", "12345678");

@@ -18,6 +18,31 @@ import java.io.File;
  * A resource of message.
  */
 
+
+// check remote hostname
+
+//@GET
+//@Produces(MediaType.TEXT_PLAIN)
+//@Path("ip")
+//public String sayIP(@Context HttpServletRequest req, @QueryParam("p1") String p1, ...) {
+//        return req.getRemoteAddr();
+//        }
+//
+//
+//@Path("terminal")
+//public class terminal {
+//    @Context private javax.servlet.http.HttpServletRequest hsr;
+//    @GET
+//    @Path("get_ip")
+//    @Produces("text/plain")
+//    public String get_ip()
+//    {
+//        return ip = hsr.getRemoteAddr();
+//    }
+//}
+
+
+
 @PublicApi
 @Path("/file")
 public class AttachmentRest {
@@ -25,9 +50,7 @@ public class AttachmentRest {
     private static final Logger log = LoggerFactory.getLogger(AttachmentRest.class);
 
     private AttachmentPathManager attachmentPathManager = ComponentAccessor.getAttachmentPathManager();
-//    private File rootDir = new File(attachmentPathManager.getAttachmentPath());
     private File rootDir = new File(ComponentAccessor.getAttachmentPathManager().getAttachmentPath());
-
 
 
     @GET
@@ -56,7 +79,7 @@ public class AttachmentRest {
         String filePathStr = filePath.toString();
         filePathStr = filePathStr + "/" + attachmentId;
 
-        log.warn(" ======== get attach ======= " + filePathStr);
+        //log.warn(" ======== get attach ======= " + filePathStr);
 
         File atFile = new File(filePathStr);
         Response.ResponseBuilder responseBuilder = Response.ok((Object) atFile);

@@ -9,6 +9,7 @@ public class AttachmentParams {
     private Timestamp created;
     private Long id;
     private String fileSizeDisplay;
+    private boolean Editable;
 
     public AttachmentParams(String fileName, Long fileSize, String author, Timestamp created, Long id) {
         this.fileName = fileName;
@@ -17,6 +18,7 @@ public class AttachmentParams {
         this.created = created;
         this.id = id;
         this.fileSizeDisplay = getFileSizeDisplayFromLong(fileSize);
+        this.Editable = getEditableFromFileName(fileName);
 
     }
 
@@ -65,6 +67,10 @@ public class AttachmentParams {
         return fileSizeDisplay;
     }
 
+    public boolean isEditable() {
+        return Editable;
+    }
+
     private String getFileSizeDisplayFromLong(Long fileSize) {
         if (fileSize % 1000 > 0) {
             return String.valueOf((Long)(fileSize / 1000)) + " kB";
@@ -75,5 +81,19 @@ public class AttachmentParams {
         }
 
         return String.valueOf(fileSize);
+    }
+
+    private boolean getEditableFromFileName(String fileName) {
+        // разрешаем редактирование только для doc docx xls xlsx
+        String fileExt;
+
+        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+
+            fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+            if (fileExt.equals("doc") || fileExt.equals("docx") || fileExt.equals("xls") || fileExt.equals("xlsx")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

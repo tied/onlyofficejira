@@ -54,15 +54,12 @@ public class OnlyOfficeLinks extends AbstractJiraContextProvider {
 
         }
 
-
-
         contextMap.put("attachments", attachmentParamsList);
         contextMap.put("issueid", currentIssue.getId());
         contextMap.put("jirabaseurl", ComponentAccessor.getApplicationProperties().getString(APKeys.JIRA_BASEURL));
 
         contextMap.put("projectId", currentIssue.getProjectId());
         contextMap.put("issueId", currentIssue.getId());
-
 
         return contextMap;
     }

@@ -9,7 +9,9 @@ import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
@@ -18,6 +20,31 @@ import java.io.File;
  * A resource of message.
  */
 
+
+// check remote hostname
+
+//@GET
+//@Produces(MediaType.TEXT_PLAIN)
+//@Path("ip")
+//public String sayIP(@Context HttpServletRequest req, @QueryParam("p1") String p1, ...) {
+//        return req.getRemoteAddr();
+//        }
+//
+//
+//@Path("terminal")
+//public class terminal {
+//    @Context private javax.servlet.http.HttpServletRequest hsr;
+//    @GET
+//    @Path("get_ip")
+//    @Produces("text/plain")
+//    public String get_ip()
+//    {
+//        return ip = hsr.getRemoteAddr();
+//    }
+//}
+
+
+
 @PublicApi
 @Path("/file")
 public class AttachmentRest {
@@ -25,9 +52,7 @@ public class AttachmentRest {
     private static final Logger log = LoggerFactory.getLogger(AttachmentRest.class);
 
     private AttachmentPathManager attachmentPathManager = ComponentAccessor.getAttachmentPathManager();
-//    private File rootDir = new File(attachmentPathManager.getAttachmentPath());
     private File rootDir = new File(ComponentAccessor.getAttachmentPathManager().getAttachmentPath());
-
 
 
     @GET
@@ -39,11 +64,16 @@ public class AttachmentRest {
 //                                  @QueryParam("issueId") String issueId,
 //                                  @QueryParam("attachmentId") String attachmentId,
 //                                  @QueryParam("filename") String filename)
-    public Response getAttachment(@PathParam("projectId") String projectId,
+    public Response getAttachment(@Context HttpServletRequest request,
+                                  @PathParam("projectId") String projectId,
                                   @PathParam("issueId") String issueId,
                                   @PathParam("attachmentId") String attachmentId,
                                   @PathParam("filename") String filename)
     {
+
+        log.warn("remote addr: " + request.getRemoteAddr());
+        log.warn("remote name: " + request.getRemoteHost());
+        log.warn("remote port: " + String.valueOf(request.getRemotePort()));
 
 //        File rootDir = new File(ComponentAccessor.getAttachmentPathManager().getAttachmentPath());
 
@@ -56,7 +86,7 @@ public class AttachmentRest {
         String filePathStr = filePath.toString();
         filePathStr = filePathStr + "/" + attachmentId;
 
-        log.warn(" ======== get attach ======= " + filePathStr);
+        //log.warn(" ======== get attach ======= " + filePathStr);
 
         File atFile = new File(filePathStr);
         Response.ResponseBuilder responseBuilder = Response.ok((Object) atFile);

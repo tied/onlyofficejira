@@ -1,0 +1,618 @@
+{namespace JIRA.Templates.ViewIssue}
+
+/**
+ * @param viewMode
+ * @param sortKey
+ * @param sortOrder
+ * @param attachments
+ * @param fullBaseUrl
+ * @param baseurl
+ * @param issue
+ */
+{template .renderAttachments}
+    {if $viewMode == 'list'}
+        {call .fileAttachments data="all" /}
+    {else}
+        {call .galleryAttachments data="all" /}
+    {/if}
+{/template}
+
+/**
+ * @param sortKey
+ * @param sortOrder
+ * @param attachments
+ * @param fullBaseUrl
+ * @param baseurl
+ * @param issue
+ */
+{template .fileAttachments}
+    <ol id="file_attachments" class="item-attachments" data-sort-key="{$sortKey}" data-sort-order="{$sortOrder}">
+        {foreach $fileAttachment in $attachments}
+            {call .fileAttachment data="all"}
+                {param fileAttachment: $fileAttachment /}
+            {/call}
+        {/foreach}
+    </ol>
+{/template}
+
+/**
+ * @param sortKey
+ * @param sortOrder
+ * @param attachments
+ * @param fullBaseUrl
+ * @param baseurl
+ * @param issue
+ */
+{template .galleryAttachments}
+    <ol id="attachment_thumbnails" class="item-attachments" data-sort-key="{$sortKey}" data-sort-order="{$sortOrder}">
+        {foreach $imageAttachment in $attachments}
+            {call .imageAttachment data="all" }
+                {param imageAttachment: $imageAttachment /}
+            {/call}
+        {/foreach}
+    </ol>
+{/template}
+
+/**
+ * @param fileAttachment
+ * @param issue
+ * @param fullBaseUrl
+ * @param baseurl
+ */
+{template .fileAttachment}
+    <li
+        class="attachment-content js-file-attachment{if not $fileAttachment.latest} earlier-version{/if}"
+        data-attachment-id="{$fileAttachment.id}"
+        {call .renderAttachmentData}
+            {param issue: $issue /}
+            {param attachment: $fileAttachment /}
+        {/call}
+        >
+        {if $fileAttachment.expandable}
+            {call .zipFileAttachment data="all" /}
+        {else}
+            <div class="attachment-thumb">
+                <a
+                    href="{$baseurl}/{toString($fileAttachment.attachmentUrl)}"
+                    draggable="true"
+                    data-downloadurl="{$fileAttachment.mimeType}:{$fileAttachment.fileName}:{$fullBaseUrl}/{toString($fileAttachment.attachmentUrl)}"
+                    {call .tagAttachment}
+                        {param attachment: $fileAttachment /}
+                    {/call}
+                >
+                    {call .renderAttachmentIcon data="all" }
+                        {param mimetype: $fileAttachment.mimeType /}
+                    {/call}
+                </a>
+            </div>
+            <dl>
+                {call .renderAttachmentInfo data="all"}
+                    {param attachment: $fileAttachment /}
+                {/call}
+            </dl>
+        {/if}
+    </li>
+{/template}
+
+/**
+ * @param fileAttachment
+ * @param baseurl
+ * @param fullBaseUrl
+ */
+{template .zipFileAttachment}
+    <div class="twixi-block collapsed expander">
+        <div class="twixi-wrap verbose">
+            <a href="#" class="twixi"><span class="icon-default aui-icon aui-icon-small aui-iconfont-expanded"><span>{getText('admin.common.words.hide')}</span></span></a>
+            <div class="attachment-thumb">
+                <a
+                    href="{$baseurl}/{toString($fileAttachment.attachmentUrl)}"
+                    draggable="true"
+                    data-downloadurl="{$fileAttachment.mimeType}:{$fileAttachment.fileName}:{$fullBaseUrl}/{toString($fileAttachment.attachmentUrl)}"
+                    {call .tagAttachment}
+                        {param attachment: $fileAttachment /}
+                    {/call}
+                >
+                    {call .renderAttachmentIcon data="all"}
+                        {param mimetype: $fileAttachment.mimeType /}
+                    {/call}
+                </a>
+            </div>
+            <dl>
+                {call .renderAttachmentInfo data="all"}
+                    {param attachment: $fileAttachment /}
+                {/call}
+                <dd class="zip-contents">
+                    <ol>
+                        <li>
+                            <div class="attachment-thumb">
+                                <img src="{$baseurl}/images/icons/wait.gif" />
+                            </div>
+                            {getText('archive.view.entries.loading')}
+                        </li>
+                    </ol>
+                </dd>
+            </dl>
+        </div>
+        <div class="twixi-wrap concise">
+            <a href="#" class="twixi"><span class="icon-default aui-icon aui-icon-small aui-iconfont-collapsed"><span>{getText('admin.common.words.show')}</span></span></a>
+
+            <div class="attachment-thumb">
+                <a
+                    href="{$baseurl}/{toString($fileAttachment.attachmentUrl)}"
+                    draggable="true"
+                    data-downloadurl="{$fileAttachment.mimeType}:{$fileAttachment.fileName}:{$fullBaseUrl}/{toString($fileAttachment.attachmentUrl)}"
+                    {call .tagAttachment}
+                        {param attachment: $fileAttachment /}
+                    {/call}
+                >
+                    {call .renderAttachmentIcon data="all" }
+                        {param mimetype: $fileAttachment.mimeType /}
+                    {/call}
+                </a>
+            </div>
+            <dl>
+                {call .renderAttachmentInfo data="all"}
+                    {param attachment: $fileAttachment /}
+                {/call}
+            </dl>
+        </div>
+    </div>
+{/template}
+
+/**
+ * @param imageAttachment
+ * @param fullBaseUrl
+ * @param baseurl
+ * @param issue
+ */
+{template .imageAttachment}
+    <li
+        class="attachment-content js-file-attachment"
+        draggable="true"
+        data-downloadurl="{$imageAttachment.mimeType}:{$imageAttachment.fileName}:{$fullBaseUrl}/{toString($imageAttachment.attachmentUrl)}"
+        {call .renderAttachmentData}
+            {param issue: $issue /}
+            {param attachment: $imageAttachment /}
+        {/call}
+        >
+        <div class="attachment-thumb">
+            <a
+                href="{$baseurl}/{toString($imageAttachment.attachmentUrl)}"
+                title="{$imageAttachment.fileName} -{if $imageAttachment.latest} {getText('common.words.latest')}{/if} {$imageAttachment.createdDateTime}{if $imageAttachment.authorDisplayName} - {$imageAttachment.authorDisplayName}{/if}"
+                {call .tagAttachment}
+                    {param attachment: $imageAttachment /}
+                {/call}
+            >
+
+                {if $imageAttachment.thumbnailUrl != null}
+                    <img src="{toString($imageAttachment.thumbnailUrl)}" alt="{$imageAttachment.fileName}" />
+                {else}
+                    {call .renderThumbnailIcon}
+                        {param mimetype: $imageAttachment.mimeType /}
+                    {/call}
+                {/if}
+            </a>
+        </div>
+        <dl {if not $imageAttachment.latest}class="earlier-version"{/if}>
+            <dt>
+                {if $imageAttachment.deletable}
+                    <span class="blender blender-delete"></span>
+                    <div class="attachment-delete">
+                        <a title="{getText('attachment.delete.tooltip')}" id="del_{$imageAttachment.id}" href="{$baseurl}/secure/DeleteAttachment!default.jspa?id={$issue.id}&deleteAttachmentId={$imageAttachment.id}&from=issue">
+                            <span class="icon-default aui-icon aui-icon-small aui-iconfont-delete">{getText('attachment.delete.tooltip')}</span>
+                        </a>
+                    </div>
+                {else}
+                    <span class="blender"></span>
+                {/if}
+                <a {sp}
+                    href="{$baseurl}/{toString($imageAttachment.attachmentUrl)}"
+                    class="attachment-title"
+                    title="{$imageAttachment.fileName} -{if $imageAttachment.latest} {getText('common.words.latest')}{/if} {$imageAttachment.createdDateTime}{if $imageAttachment.authorDisplayName} - {$imageAttachment.authorDisplayName}{/if}"
+                    {call .tagAttachment}
+                        {param attachment: $imageAttachment /}
+                    {/call}
+                >
+                    {$imageAttachment.fileName}
+                </a>
+            </dt>
+            <dd class="attachment-size">{$imageAttachment.fileSize}</dd>
+			<dd class="attachment-size" style="margin-right: 5px;">
+				<a href="#">
+					<span class="aui-icon aui-icon-small aui-iconfont-edit-filled">alx onlyoffice edit link</span>
+				</a>
+			</dd>            
+            <dd class="attachment-date"><time class="livestamp" datetime="{toString($imageAttachment.createdIso8601)}">{$imageAttachment.createdDateTime}</time></dd>
+        </dl>
+    </li>
+{/template}
+
+/**
+ * @param attachment
+ * @param issue
+ * @param fullBaseUrl
+ * @param baseurl
+ */
+{template .renderAttachmentInfo}
+    <dt class="attachment-title">
+        <a
+            href="{$baseurl}/{toString($attachment.attachmentUrl)}"
+            title="{if $attachment.latest}{getText('common.words.latest')} {/if} {$attachment.createdDateTime}{if $attachment.authorDisplayName} - {$attachment.authorDisplayName}{/if}"
+            draggable="true"
+            data-downloadurl="{$attachment.mimeType}:{$attachment.fileName}:{$fullBaseUrl}/{toString($attachment.attachmentUrl)}"
+            {call .tagAttachment}
+                {param attachment: $attachment /}
+            {/call}
+        >
+            {$attachment.fileName}
+        </a>
+    </dt>
+    <dd class="attachment-delete">
+        {if $attachment.deletable}
+            <a title="{getText('attachment.delete.tooltip')}" id="del_{$attachment.id}" href="{$baseurl}/secure/DeleteAttachment!default.jspa?id={$issue.id}&deleteAttachmentId={$attachment.id}&from=issue">
+                <span class="icon-default aui-icon aui-icon-small aui-iconfont-delete">{getText('attachment.delete.tooltip')}</span>
+            </a>
+        {else}
+            <span class="icon"></span>
+        {/if}
+    </dd>
+	<dd class="attachment-size" style="margin-right: 0px; width: 50px;">
+		<a href="#">
+			<span class="aui-icon aui-icon-small aui-iconfont-edit-filled">alx onlyoffice edit link</span>
+		</a>
+	</dd>    
+    <dd class="attachment-date"><time class="livestamp" datetime="{toString($attachment.createdIso8601)}">{$attachment.createdDateTime}</time></dd>
+    <dd class="attachment-size">{$attachment.fileSize}</dd>
+    <dd class="attachment-author">{$attachment.authorDisplayName ? $attachment.authorDisplayName: ''}</dd>
+{/template}
+
+/**
+ * @param attachment
+ * @param issue
+ */
+{template .renderAttachmentData private="true"}
+    data-issue-id="{$issue.id}"
+    {if $attachment.expandable}
+        data-attachment-type="expandable"
+    {elseif $attachment.imageFileType}
+        data-attachment-type="image"
+        data-attachment-thumbnail="{isNonnull($attachment.thumbnailUrl)}"
+    {else}
+        data-attachment-type="file"
+    {/if}
+{/template}
+
+/**
+ * @param baseurl
+ * @param mimetype
+ */
+{template .renderAttachmentLegacyIcon}
+    {let $fileIconUrl}
+        {call .matchFileIconUrl data="all" /}
+    {/let}
+    {let $fileIconAlt}
+        {call .matchFileIconAlt data="all" /}
+    {/let}
+
+    <img src="{$fileIconUrl}" height="16" width="16" border="0" alt="{$fileIconAlt}">
+{/template}
+
+
+/**
+ * @param baseurl
+ * @param mimetype
+ */
+{template .matchFileIconUrl}
+    {$baseurl}/images/icons/attach/{call .matchFileIcon data="all" /}
+{/template}
+
+/**
+ * @param mimetype
+ */
+{template .matchFileIcon}
+    {switch $mimetype}
+        {case 'application/pdf'}
+        pdf.gif
+        {case 'image/gif'}
+        image.gif
+        {case 'image/png'}
+        image.gif
+        {case 'image/jpeg'}
+        image.gif
+        {case 'text/xml'}
+        xml.gif
+        {case 'text/html'}
+        html.gif
+        {case 'text/plain'}
+        text.gif
+        {case 'application/zip'}
+        zip.gif
+        {case 'application/x-gzip-compressed'}
+        zip.gif
+
+        {case 'application/msword'}
+        word.gif
+        {case 'application/msword-template'}
+        word.gif
+        {case 'application/vnd.ms-word.document.macroEnabled.12'}
+        word.gif
+        {case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}
+        word.gif
+        {case 'application/vnd.ms-word.template.macroEnabled.12'}
+        word.gif
+        {case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template'}
+        word.gif
+
+        {case 'application/vnd.ms-excel'}
+        excel.gif
+        {case 'application/vnd.ms-excel.addin.macroEnabled.12'}
+        excel.gif
+        {case 'application/vnd.ms-excel.sheet.binary.macroEnabled.12'}
+        excel.gif
+        {case 'application/vnd.ms-excel.sheet.macroEnabled.12'}
+        excel.gif
+        {case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
+        excel.gif
+        {case 'application/vnd.ms-excel.template.macroEnabled.12'}
+        excel.gif
+        {case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template'}
+        excel.gif
+
+        {case 'application/vnd.ms-powerpoint'}
+        powerpoint.gif
+        {case 'application/vnd.ms-powerpoint.template.macroEnabled.12'}
+        powerpoint.gif
+        {case 'application/vnd.openxmlformats-officedocument.presentationml.template'}
+        powerpoint.gif
+        {case 'application/vnd.ms-powerpoint.addin.macroEnabled.12'}
+        powerpoint.gif
+        {case 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12'}
+        powerpoint.gif
+        {case 'application/vnd.openxmlformats-officedocument.presentationml.slideshow'}
+        powerpoint.gif
+        {case 'application/vnd.ms-powerpoint.presentation.macroEnabled.12'}
+        powerpoint.gif
+        {case 'application/vnd.openxmlformats-officedocument.presentationml.presentation'}
+        powerpoint.gif
+
+        {case 'text/x-java'}
+        java.gif
+        {case 'text/x-java-source'}
+        java.gif
+        {case 'application/x-java-archive'}
+        java.gif
+        {default}
+        file.gif
+    {/switch}
+{/template}
+
+/**
+ * @param mimetype
+ */
+{template .matchFileIconAlt}
+    {switch $mimetype}
+        {case 'application/pdf'} 
+        {getText('icons.pdf.file')}
+        {case 'image/gif'}
+        {getText('icons.gif.file')}
+        {case 'image/png'}
+        {getText('icons.png.file')}
+        {case 'image/jpeg'}
+        {getText('icons.jpeg.file')}
+        {case 'text/xml'}
+        {getText('icons.xml.file')}
+        {case 'text/html'}
+        {getText('icons.html.file')}
+        {case 'text/plain'}
+        {getText('icons.text.file')}
+        {case 'application/zip'}
+        {getText('icons.zip.archive')}
+        {case 'application/x-gzip-compressed'}
+        {getText('icons.gzip.archive')}
+
+        {case 'application/msword'}
+        {getText('icons.microsoft.word')}
+        {case 'application/msword-template'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.openxmlformats'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.ms-word.document.macroEnabled.12'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.ms-word.template.macroEnabled.12'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template'}
+        {getText('icons.microsoft.word')}
+
+        {case 'application/vnd.ms-excel'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.ms-excel'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.ms-excel.addin.macroEnabled.12'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.ms-excel.sheet.binary.macroEnabled.12'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.ms-excel.sheet.macroEnabled.12'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.ms-excel.template.macroEnabled.12'}
+        {getText('icons.microsoft.word')}
+        {case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template'}
+        {getText('icons.microsoft.word')}
+
+        {case 'application/vnd.ms-powerpoint'}
+        {getText('icons.microsoft.powerpoint')}
+        {case 'application/vnd.ms-powerpoint.template.macroEnabled.12'}
+        {getText('icons.microsoft.powerpoint')}
+        {case 'application/vnd.openxmlformats-officedocument.presentationml.template'}
+        {getText('icons.microsoft.powerpoint')}
+        {case 'application/vnd.ms-powerpoint.addin.macroEnabled.12'}
+        {getText('icons.microsoft.powerpoint')}
+        {case 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12'}
+        {getText('icons.microsoft.powerpoint')}
+        {case 'application/vnd.openxmlformats-officedocument.presentationml.slideshow'}
+        {getText('icons.microsoft.powerpoint')}
+        {case 'application/vnd.ms-powerpoint.presentation.macroEnabled.12'}
+        {getText('icons.microsoft.powerpoint')}
+        {case 'application/vnd.openxmlformats-officedocument.presentationml.presentation'}
+        {getText('icons.microsoft.powerpoint')}
+
+        {case 'text/x-java'}
+        {getText('icons.java.source.file')}
+        {case 'text/x-java-source'}
+        {getText('icons.java.source.file')}
+        {case 'application/x-java-archive'}
+        {getText('icons.java.archive.file')}
+        {default}
+        {getText('icons.file')}
+    {/switch}
+{/template}
+
+/**
+ * @param mimetype
+ */
+{template .renderAttachmentIcon}
+    {let $fileClass}
+        {call .matchFileClass data="all" /}
+    {/let}
+    {let $fileIconAlt}
+        {call .matchFileIconAlt data="all" /}
+    {/let}
+
+    <span class="aui-icon aui-icon-small attachment-icon {$fileClass}" title="{$fileIconAlt}"></span>
+{/template}
+
+/**
+ * @param mimetype
+ */
+{template .renderThumbnailIcon}
+    {let $fileClass}
+        {call .matchFileClass data="all" /}
+    {/let}
+
+    <span class="aui-icon aui-icon-large attachment-thumbnail-icon {$fileClass}"></span>
+{/template}
+
+/**
+ * @param mimetype
+ */
+{template .matchFileClass}
+    {switch $mimetype}
+        {case 'application/pdf'}
+        aui-iconfont-file-pdf
+        {case 'image/gif'}
+        aui-iconfont-image
+        {case 'image/png'}
+        aui-iconfont-image
+        {case 'image/jpeg'}
+        aui-iconfont-image
+        {case 'text/xml'}
+        aui-iconfont-file-code
+        {case 'text/html'}
+        aui-iconfont-file-code
+        {case 'text/plain'}
+        aui-iconfont-file-txt
+        {case 'application/zip'}
+        aui-iconfont-file-zip
+        {case 'application/x-gzip-compressed'}
+        aui-iconfont-file-zip
+
+        {case 'application/msword'}
+        aui-iconfont-file-doc
+        {case 'application/msword-template'}
+        aui-iconfont-file-doc
+        {case 'application/vnd.ms-word.document.macroEnabled.12'}
+        aui-iconfont-file-doc
+        {case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}
+        aui-iconfont-file-doc
+        {case 'application/vnd.ms-word.template.macroEnabled.12'}
+        aui-iconfont-file-doc
+        {case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template'}
+        aui-iconfont-file-doc
+
+        {case 'application/vnd.ms-excel'}
+        aui-iconfont-file-xls
+        {case 'application/vnd.ms-excel.addin.macroEnabled.12'}
+        aui-iconfont-file-xls
+        {case 'application/vnd.ms-excel.sheet.binary.macroEnabled.12'}
+        aui-iconfont-file-xls
+        {case 'application/vnd.ms-excel.sheet.macroEnabled.12'}
+        aui-iconfont-file-xls
+        {case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
+        aui-iconfont-file-xls
+        {case 'application/vnd.ms-excel.template.macroEnabled.12'}
+        aui-iconfont-file-xls
+        {case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template'}
+        aui-iconfont-file-xls
+
+        {case 'application/vnd.ms-powerpoint'}
+        aui-iconfont-file-ppt
+        {case 'application/vnd.ms-powerpoint.template.macroEnabled.12'}
+        aui-iconfont-file-ppt
+        {case 'application/vnd.openxmlformats-officedocument.presentationml.template'}
+        aui-iconfont-file-ppt
+        {case 'application/vnd.ms-powerpoint.addin.macroEnabled.12'}
+        aui-iconfont-file-ppt
+        {case 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12'}
+        aui-iconfont-file-ppt
+        {case 'application/vnd.openxmlformats-officedocument.presentationml.slideshow'}
+        aui-iconfont-file-ppt
+        {case 'application/vnd.ms-powerpoint.presentation.macroEnabled.12'}
+        aui-iconfont-file-ppt
+        {case 'application/vnd.openxmlformats-officedocument.presentationml.presentation'}
+        aui-iconfont-file-ppt
+
+        {case 'text/x-java'}
+        aui-iconfont-file-code
+        {case 'text/x-java-source'}
+        aui-iconfont-file-code
+        {case 'application/x-java-archive'}
+        aui-iconfont-file-zip
+        {default}
+        aui-iconfont-devtools-file
+    {/switch}
+{/template}
+
+/**
+ * @param attachment
+ */
+{template .tagAttachment}
+    {call .tagFilePreview}
+        {param id: $attachment.id /}
+        {param title: $attachment.fileName /}
+        {param mimeType: $attachment.mimeType /}
+        {param isImage: $attachment.thumbnailUrl != null /}
+        {param thumbnailUrl: $attachment.thumbnailUrl /}
+    {/call}
+{/template}
+
+/**
+ * @param id
+ * @param title
+ * @param mimeType
+ * @param? isImage
+ * @param? thumbnailUrl
+ */
+{template .tagFilePreview}
+    {let $previewType}
+        {if $isImage or $mimeType != null and strContains($mimeType, 'image/')}
+            image
+        {elseif $mimeType == 'application/pdf'}
+            document
+        {else}
+            unknown
+        {/if}
+    {/let}
+
+    {if $previewType != 'unknown'}
+        {sp}
+        file-preview-id="{$id}"
+        file-preview-title="{$title}"
+        file-preview-type="{$previewType}"
+        {if $thumbnailUrl != null}
+            file-preview-url="{toString($thumbnailUrl)}"
+        {/if}
+    {/if}
+{/template}

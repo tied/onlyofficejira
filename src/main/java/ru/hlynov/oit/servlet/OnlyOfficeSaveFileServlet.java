@@ -131,6 +131,7 @@ public class OnlyOfficeSaveFileServlet extends HttpServlet {
             ApplicationUser user = null;
 
             if ((status == 2L) || (status == 3L)) {
+//            if ((status == 2L) || (status == 3L) || (status == 1L)) {
                 //user = null;
                 JSONArray users = jsonObj.getJSONArray("users");
                 if (users.length() > 0) {

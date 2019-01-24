@@ -113,8 +113,8 @@
                     </p>
 
                     <p>
-                    COPY config /app/onlyoffice/setup/config/<br>
-                    COPY run-document-server.sh /app/onlyoffice/run-document-server.sh<br>
+                    # COPY config /app/onlyoffice/setup/config/<br>
+                    # COPY run-document-server.sh /app/onlyoffice/run-document-server.sh<br>
                     </p>
 
                     <p>

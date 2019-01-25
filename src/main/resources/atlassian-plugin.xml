@@ -15,14 +15,10 @@
     <dependency>com.atlassian.auiplugin:ajs</dependency>
     <resource type="download" name="onlyofficejira.css" location="/css/onlyofficejira.css"/>
     <resource type="download" name="onlyofficejira.js" location="/js/onlyofficejira.js"/>
-    <!--<resource type="download" name="oodelattach.js" location="/js/oodelattach.js"/>-->
     <resource type="download" name="images/" location="/images"/>
     <context>onlyofficejira</context>
     <context>jira.view.issue</context>
-    <!--<context>jira.navigator.advanced</context>-->
     <context>jira.navigator.simple</context>
-    <!--<context>jira.general</context>-->
-    <!--<context>atl.general</context>-->
   </web-resource>
   <rest name="Attachment Rest" i18n-name-key="attachment-rest.name" key="attachment-rest" path="/onlyoffice" version="1.0">
     <description key="attachment-rest.description">The Attachment Rest Plugin</description>

@@ -7,6 +7,7 @@ import com.atlassian.jira.config.util.AttachmentPathManager;
 
 import com.atlassian.jira.issue.attachment.FileAttachments;
 import com.atlassian.jira.ofbiz.OfBizDelegator;
+import com.atlassian.jira.permission.ProjectPermissions;
 import com.atlassian.jira.user.ApplicationUser;
 import org.apache.commons.io.IOUtils;
 import org.ofbiz.core.entity.GenericEntityException;
@@ -18,6 +19,12 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.issue.IssueManager;
+
+import com.atlassian.jira.security.PermissionManager;
+import com.atlassian.jira.permission.ProjectPermission;
 
 public class AttachmentUtil {
 
@@ -98,6 +105,14 @@ public class AttachmentUtil {
 
     public static void saveAttachment(String projectId, String issueId, String attachmentId, InputStream attachmentData, int size, ApplicationUser user) throws IOException, IllegalArgumentException {
 
+        // если редактирование задачи и аттачментов запрещено то не сохраняем изменения
+        if (!canDeleteAttachment(issueId, attachmentId, user)) {
+            log.warn("attacment with id " + attachmentId + " not allow to edit");
+
+            IOUtils.closeQuietly(attachmentData);
+            return;
+        }
+
         AttachmentPathManager attachmentPathManager = ComponentAccessor.getAttachmentPathManager();
         File rootDir = new File(attachmentPathManager.getAttachmentPath());
         File filePath = FileAttachments.getAttachmentDirectoryForIssue(rootDir, projectId, issueId);
@@ -117,6 +132,42 @@ public class AttachmentUtil {
         }
 
     }
+
+    private static boolean isUserAttachmentAuthor(Attachment attachment, ApplicationUser user) {
+        ApplicationUser attachmentAuthor = attachment.getAuthorObject();
+
+        if (attachmentAuthor == null && user == null) {
+            return true;
+        } else if (attachmentAuthor == null || user == null) {
+            return false;
+        }
+
+        return attachmentAuthor.equals(user);
+    }
+
+
+//    private static boolean canDeleteAttachment(Issue issue, Attachment attachment, ApplicationUser user) {
+    private static boolean canDeleteAttachment(String issueId, String attachmentId, ApplicationUser user) {
+
+        IssueManager issueManager = ComponentAccessor.getIssueManager();
+        PermissionManager permissionManager = ComponentAccessor.getPermissionManager();
+        AttachmentManager attachmentManager = ComponentAccessor.getAttachmentManager();
+
+        Issue issue = issueManager.getIssueObject(issueId);
+        Attachment attachment = attachmentManager.getAttachment(Long.valueOf(attachmentId));
+
+
+        return issueManager.isEditable(issue, user)
+                && (permissionManager.hasPermission(ProjectPermissions.DELETE_ALL_ATTACHMENTS, issue, user)
+                || (permissionManager.hasPermission(ProjectPermissions.DELETE_OWN_ATTACHMENTS, issue, user) && isUserAttachmentAuthor(attachment, user)));
+
+
+//        return issueManager.isEditable(issue)
+//                && (permissionManager.hasPermission(Permissions.ATTACHMENT_DELETE_ALL, issue, user)
+//                || (permissionManager.hasPermission(Permissions.ATTACHMENT_DELETE_OWN, issue, user) && isUserAttachmentAuthor(attachment, user)));
+
+    }
+
 
 
 }

@@ -100,7 +100,8 @@ public class OnlyOfficeEditorServlet extends HttpServlet{
 
         ApplicationUser loggedInUser = ComponentAccessor.getJiraAuthenticationContext().getLoggedInUser();
 
-        context.put("userId", String.valueOf(loggedInUser.getId()));
+//        context.put("userId", String.valueOf(loggedInUser.getId()));
+        context.put("userId", (loggedInUser.getName()));
         context.put("userName", loggedInUser.getDisplayName());
 
         reqParam = req.getParameter("projectId");

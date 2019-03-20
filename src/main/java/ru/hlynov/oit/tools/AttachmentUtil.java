@@ -105,13 +105,13 @@ public class AttachmentUtil {
 
     public static void saveAttachment(String projectId, String issueId, String attachmentId, InputStream attachmentData, int size, ApplicationUser user) throws IOException, IllegalArgumentException {
 
-        // если редактирование задачи и аттачментов запрещено то не сохраняем изменения
-        if (!canDeleteAttachment(issueId, attachmentId, user)) {
-            log.warn("attacment with id " + attachmentId + " not allow to edit");
-
-            IOUtils.closeQuietly(attachmentData);
-            return;
-        }
+//        // если редактирование задачи и аттачментов запрещено то не сохраняем изменения - надо но не тут
+//        if (!canDeleteAttachment(issueId, attachmentId, user)) {
+//            log.warn("attacment with id " + attachmentId + " not allow to edit");
+//
+//            IOUtils.closeQuietly(attachmentData);
+//            return;
+//        }
 
         AttachmentPathManager attachmentPathManager = ComponentAccessor.getAttachmentPathManager();
         File rootDir = new File(attachmentPathManager.getAttachmentPath());
@@ -147,7 +147,7 @@ public class AttachmentUtil {
 
 
 //    private static boolean canDeleteAttachment(Issue issue, Attachment attachment, ApplicationUser user) {
-    private static boolean canDeleteAttachment(String issueId, String attachmentId, ApplicationUser user) {
+    public static boolean canDeleteAttachment(String issueId, String attachmentId, ApplicationUser user) {
 
         IssueManager issueManager = ComponentAccessor.getIssueManager();
         PermissionManager permissionManager = ComponentAccessor.getPermissionManager();
@@ -156,6 +156,19 @@ public class AttachmentUtil {
         Issue issue = issueManager.getIssueObject(issueId);
         Attachment attachment = attachmentManager.getAttachment(Long.valueOf(attachmentId));
 
+        log.warn("=========================================================");
+        log.warn("== 123 ==");
+
+        log.warn("issueManager.isEditable: " + issueManager.isEditable(issue, user));
+        log.warn("issueManager.isEditable: " + user.getUsername());
+        log.warn("issueManager.isEditable: " + issue.getKey());
+
+        log.warn("ProjectPermissions.DELETE_ALL_ATTACHMENTS: " + permissionManager.hasPermission(ProjectPermissions.DELETE_ALL_ATTACHMENTS, issue, user));
+        log.warn("ProjectPermissions.DELETE_OWN_ATTACHMENTS: " + permissionManager.hasPermission(ProjectPermissions.DELETE_OWN_ATTACHMENTS, issue, user));
+        log.warn("isUserAttachmentAuthor: " + isUserAttachmentAuthor(attachment, user));
+
+
+//        return issueManager.isEditable(issue, user);
 
         return issueManager.isEditable(issue, user)
                 && (permissionManager.hasPermission(ProjectPermissions.DELETE_ALL_ATTACHMENTS, issue, user)

@@ -6,6 +6,8 @@ import com.atlassian.jira.user.ApplicationUser;
 
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.google.common.collect.Maps;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +30,8 @@ import com.atlassian.sal.api.auth.LoginUriProvider;
 import java.net.URI;
 import java.util.UUID;
 
+import ru.hlynov.oit.api.PluginSettingsService;
+
 public class OnlyOfficeEditorServlet extends HttpServlet{
     private static final Logger log = LoggerFactory.getLogger(OnlyOfficeEditorServlet.class);
 
@@ -38,11 +42,15 @@ public class OnlyOfficeEditorServlet extends HttpServlet{
     @ComponentImport
     private final LoginUriProvider loginUriProvider;
 
+    private final PluginSettingsService pluginSettingsService;
+
+
     @Inject
-    public OnlyOfficeEditorServlet(UserManager userManager, TemplateRenderer renderer, LoginUriProvider loginUriProvider) {
+    public OnlyOfficeEditorServlet(UserManager userManager, TemplateRenderer renderer, LoginUriProvider loginUriProvider, PluginSettingsService pluginSettingsService) {
         this.userManager = userManager;
         this.renderer = renderer;
         this.loginUriProvider = loginUriProvider;
+        this.pluginSettingsService = pluginSettingsService;
     }
 
     @Override
@@ -61,8 +69,20 @@ public class OnlyOfficeEditorServlet extends HttpServlet{
 
         Map<String, Object> context = Maps.newHashMap();
 
-        context.put("docserviceApiUrl", "http://localhost/web-apps/apps/api/documents/api.js");
+        ///////////////////////////////////////////
+        // имя сервера с редактором
+        ///////////////////////////////////////////
+        String cfg = pluginSettingsService.getConfigJson();
+        JsonParser parser = new JsonParser();
+        JsonObject cfgObj = parser.parse(cfg).getAsJsonObject();
+
+        String serverName = cfgObj.get("servername").getAsString();
+
+
+        context.put("docserviceApiUrl", serverName + "/web-apps/apps/api/documents/api.js");
+//        context.put("docserviceApiUrl", "http://" + serverName + "/web-apps/apps/api/documents/api.js");
 //        context.put("key", "12345678");
+        ///////////////////////////////////////////
 
         String reqParam = req.getParameter("fileurl");
         if (reqParam == null) {
@@ -80,7 +100,8 @@ public class OnlyOfficeEditorServlet extends HttpServlet{
 
         ApplicationUser loggedInUser = ComponentAccessor.getJiraAuthenticationContext().getLoggedInUser();
 
-        context.put("userId", String.valueOf(loggedInUser.getId()));
+//        context.put("userId", String.valueOf(loggedInUser.getId()));
+        context.put("userId", (loggedInUser.getName()));
         context.put("userName", loggedInUser.getDisplayName());
 
         reqParam = req.getParameter("projectId");

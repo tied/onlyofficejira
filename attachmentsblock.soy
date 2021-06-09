@@ -8,6 +8,8 @@
  * @param fullBaseUrl
  * @param baseurl
  * @param issue
+ * @param projectId
+ * @param issueIdId
  */
 {template .renderAttachments}
     {if $viewMode == 'list'}
@@ -24,6 +26,8 @@
  * @param fullBaseUrl
  * @param baseurl
  * @param issue
+ * @param projectId
+ * @param issueIdId
  */
 {template .fileAttachments}
     <ol id="file_attachments" class="item-attachments" data-sort-key="{$sortKey}" data-sort-order="{$sortOrder}">
@@ -42,6 +46,8 @@
  * @param fullBaseUrl
  * @param baseurl
  * @param issue
+ * @param projectId
+ * @param issueIdId
  */
 {template .galleryAttachments}
     <ol id="attachment_thumbnails" class="item-attachments" data-sort-key="{$sortKey}" data-sort-order="{$sortOrder}">
@@ -58,6 +64,8 @@
  * @param issue
  * @param fullBaseUrl
  * @param baseurl
+ * @param projectId
+ * @param issueIdId
  */
 {template .fileAttachment}
     <li
@@ -164,6 +172,8 @@
  * @param fullBaseUrl
  * @param baseurl
  * @param issue
+ * @param projectId
+ * @param issueIdId
  */
 {template .imageAttachment}
     <li
@@ -218,7 +228,7 @@
             </dt>
             <dd class="attachment-size">{$imageAttachment.fileSize}</dd>
 			<dd class="attachment-size" style="margin-right: 5px;">
-				<a href="#">
+				<a target="_blank" href="{$baseurl}/plugins/servlet/onlyoffice/doceditor?projectId={$projectId}&issueId={$issueIdId}&attachmentId={$imageAttachment.id}&fileurl={$baseurl}/rest/onlyoffice/1.0/file/get/{$projectId}/{$issueIdId}/{$imageAttachment.id}/{$imageAttachment.fileName}&filename={$imageAttachment.fileName}">
 					<span class="aui-icon aui-icon-small aui-iconfont-edit-filled">alx onlyoffice edit link</span>
 				</a>
 			</dd>            
@@ -232,6 +242,8 @@
  * @param issue
  * @param fullBaseUrl
  * @param baseurl
+ * @param projectId
+ * @param issueIdId
  */
 {template .renderAttachmentInfo}
     <dt class="attachment-title">
@@ -257,7 +269,7 @@
         {/if}
     </dd>
 	<dd class="attachment-size" style="margin-right: 0px; width: 50px;">
-		<a href="#">
+		<a target="_blank" href="{$baseurl}/plugins/servlet/onlyoffice/doceditor?projectId={$projectId}&issueId={$issueIdId}&attachmentId={$attachment.id}&fileurl={$baseurl}/rest/onlyoffice/1.0/file/get/{$projectId}/{$issueIdId}/{$attachment.id}/{$attachment.fileName}&filename={$attachment.fileName}">
 			<span class="aui-icon aui-icon-small aui-iconfont-edit-filled">alx onlyoffice edit link</span>
 		</a>
 	</dd>    

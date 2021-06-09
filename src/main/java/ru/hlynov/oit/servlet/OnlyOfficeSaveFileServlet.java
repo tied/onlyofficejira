@@ -131,6 +131,7 @@ public class OnlyOfficeSaveFileServlet extends HttpServlet {
             ApplicationUser user = null;
 
             if ((status == 2L) || (status == 3L)) {
+//            if ((status == 2L) || (status == 3L) || (status == 1L)) {
                 //user = null;
                 JSONArray users = jsonObj.getJSONArray("users");
                 if (users.length() > 0) {
@@ -147,7 +148,8 @@ public class OnlyOfficeSaveFileServlet extends HttpServlet {
 //                    UserAccessor userAccessor = (UserAccessor)ContainerManager.getComponent("userAccessor");
                     UserManager userManager = ComponentAccessor.getUserManager();
                     //user = userManager.getUserByName(userName);
-                    user = userManager.getUserByKey(userName);
+                    user = userManager.getUserByKey(userName.toLowerCase());
+//                    user = userManager.getUserById(Long.valueOf(userName));
 
                     // log.warn("user = " + user.toString());
                 }
@@ -155,6 +157,20 @@ public class OnlyOfficeSaveFileServlet extends HttpServlet {
 //                if ((user == null) || (!AttachmentUtil.checkAccess(attachmentId, user, true))) {
 //                    throw new SecurityException("Try save without access: " + user);
 //                }
+
+
+//                log.warn(" ====== user editor =====");
+//                if (user == null) {
+//                    log.warn(" user is null");
+//                } else {
+//                    log.warn(user.getUsername());
+//                }
+
+                // если редактирование задачи и аттачментов запрещено то не сохраняем изменения
+                if (!AttachmentUtil.canDeleteAttachment(issueKey, attachmentId, user)) {
+                    log.warn("attacment with id " + attachmentId + " not allow to edit");
+                    return true;
+                }
 
                 String downloadUrl = jsonObj.getString("url");
                 log.warn("downloadUri = " + downloadUrl);

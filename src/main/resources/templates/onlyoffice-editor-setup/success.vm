@@ -11,14 +11,14 @@
 
     <body class="aui">
         <h2>Настройка редактора OnlyOffice Document Editor</h2>
-        <form class="aui">
+        <form class="aui" method="post" action="OnlyofficeEditorSetupAction!save.jspa">
             <div class="field-group">
                 <label for="comment-email">
                    Сервер<span class="aui-icon icon-required">(required)</span>
                 </label>
-                <input class="text medium-field" type="text" name="servername" placeholder="www.hostname.xxx">
+                <input class="text long-field" type="text" name="servername" placeholder="https://www.hostname.xxx" value="$serverName">
                 <div class="description">
-                    Имя сервера (или ip адресс) где находится редактор
+                    Имя сервера (с протоколом полностью доменное или ip адрес) где находится редактор
                 </div>
             </div>
             <div class="buttons-container">
@@ -33,31 +33,122 @@
 
         <div class="aui-group">
             <div class="aui-item">
-                Implementation tips 1
-                Add an aui-group for each discrete group of content - by default, they behave as rows.
-                Add as many aui-item elements to each group as you want - by default, they behave as columns.
-                Do not style the groups and items directly - treat them strictly as containers to divide up areas of the page (see notes below).
-                Setting item widths:
+                <p>Для работы редактора OnlyOffice создаются следующие соединения между серверами</p>
 
-                By default, items will be distributed evenly. Add two, they'll be 50% each; add four, 25% each; etc.
-                If you set one item to a fixed width, the remaining items will divide the remaining space evenly amongst themselves.
-                For simple groups, we recommend using a class on the aui-group, with first- last- and nth-child selectors.
+                <p>
+                <ul>
+                    <li>соединение от Jira в OnlyOffice (для передачи документа в редактор) (по умолчанию порт 80)</li>
+                    <li>соединение от OnlyOffice в Jira (для сохранения измененного документа) (по умолчанию порт 80)</li>
+                </ul>
+                <p/>
+
+                <p>Для корректной работы редактора нужно разрешить соответствующие соединения в фаерволе</p>
+
             </div>
         </div>
 
-        <h2>Рабочий dockerfile</h2>
+        <h2>Рабочий dockerfile для быстрой сборки и запуска редактора</h2>
 
         <div class="aui-group">
             <div class="aui-item">
-                Implementation tips 2
-                Add an aui-group for each discrete group of content - by default, they behave as rows.
-                Add as many aui-item elements to each group as you want - by default, they behave as columns.
-                Do not style the groups and items directly - treat them strictly as containers to divide up areas of the page (see notes below).
-                Setting item widths:
+                <div style="margin-left: 30px;color: #172B4D">
+                    <p>
+                    FROM ubuntu:16.04<br>
+                    LABEL maintainer Ascensio System SIA <support@onlyoffice.com><br>
+                    </p>
 
-                By default, items will be distributed evenly. Add two, they'll be 50% each; add four, 25% each; etc.
-                If you set one item to a fixed width, the remaining items will divide the remaining space evenly amongst themselves.
-                For simple groups, we recommend using a class on the aui-group, with first- last- and nth-child selectors.
+                    <p>
+                    ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 DEBIAN_FRONTEND=noninteractive<br>
+                    </p>
+
+                    <p>
+                    RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d && \<br>
+                    apt-get -y update && \<br>
+                    apt-get -yq install wget apt-transport-https curl locales && \<br>
+                    #    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0x8320ca65cb2de8e5 && \<br>
+                    locale-gen en_US.UTF-8 && \<br>
+                    curl -sL https://deb.nodesource.com/setup_8.x | bash - && \<br>
+                    apt-get -y update && \<br>
+                    apt-get -yq install \<br>
+                    adduser \<br>
+                    bomstrip \<br>
+                    htop \<br>
+                    libasound2 \<br>
+                    libboost-regex-dev \<br>
+                    libcairo2 \<br>
+                    libcurl3 \<br>
+                    libgconf2-4 \<br>
+                    libgtkglext1 \<br>
+                    libnspr4 \<br>
+                    libnss3 \<br>
+                    libnss3-nssdb \<br>
+                    libstdc++6 \<br>
+                    libxml2 \<br>
+                    libxss1 \<br>
+                    libxtst6 \<br>
+                    nano \<br>
+                    net-tools \<br>
+                    netcat \<br>
+                    nginx-extras \<br>
+                    nodejs \<br>
+                    postgresql \<br>
+                    postgresql-client \<br>
+                    pwgen \<br>
+                    rabbitmq-server \<br>
+                    redis-server \<br>
+                    software-properties-common \<br>
+                    sudo \<br>
+                    supervisor \<br>
+                    xvfb \<br>
+                    zlib1g && \<br>
+                    sudo -u postgres psql -c "CREATE DATABASE onlyoffice;" && \<br>
+                    sudo -u postgres psql -c "CREATE USER onlyoffice WITH password 'onlyoffice';" && \<br>
+                    sudo -u postgres psql -c "GRANT ALL privileges ON DATABASE onlyoffice TO onlyoffice;" && \<br>
+                    service postgresql stop && \<br>
+                    service redis-server stop && \<br>
+                    service rabbitmq-server stop && \<br>
+                    service supervisor stop && \<br>
+                    service nginx stop && \<br>
+                    rm -rf /var/lib/apt/lists/*<br>
+                    </p>
+
+                    <p>
+                    # COPY config /app/onlyoffice/setup/config/<br>
+                    # COPY run-document-server.sh /app/onlyoffice/run-document-server.sh<br>
+                    </p>
+
+                    <p>
+                    EXPOSE 80 443<br>
+                    </p>
+
+                    <p>
+                    ARG REPO_URL="deb http://download.onlyoffice.com/repo/debian squeeze main"<br>
+                    ARG PRODUCT_NAME=onlyoffice-documentserver<br>
+                    </p>
+
+                    <p>
+                    RUN echo "$REPO_URL" | tee /etc/apt/sources.list.d/onlyoffice.list && \<br>
+                    apt-get -y update && \<br>
+                    service postgresql start && \<br>
+                    apt-get -yq --allow-unauthenticated install $PRODUCT_NAME && \<br>
+                    service postgresql stop && \<br>
+                    service supervisor stop && \<br>
+                    chmod 755 /app/onlyoffice/*.sh && \<br>
+                    rm -rf /var/log/onlyoffice && \<br>
+                    rm -rf /var/lib/apt/lists/*<br>
+                    </p>
+
+                    <p>
+                    VOLUME /var/log/onlyoffice /var/lib/onlyoffice /var/www/onlyoffice/Data /var/lib/postgresql /usr/share/fonts/truetype/custom<br>
+                    </p>
+
+                    <p>
+                    ENTRYPOINT /app/onlyoffice/run-document-server.sh<br>
+                    </p>
+
+                </div>
+
+
             </div>
         </div>
     </body>

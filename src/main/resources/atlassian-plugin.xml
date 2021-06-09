@@ -13,27 +13,23 @@
   <!-- add our web resources -->
   <web-resource key="onlyofficejira-resources" name="onlyofficejira Web Resources">
     <dependency>com.atlassian.auiplugin:ajs</dependency>
-    <resource type="download" name="onlyofficejira.css" location="/css/onlyofficejira.css"/>
-    <resource type="download" name="onlyofficejira.js" location="/js/onlyofficejira.js"/>
-    <!--<resource type="download" name="oodelattach.js" location="/js/oodelattach.js"/>-->
+    <!--<resource type="download" name="onlyofficejira.css" location="/css/onlyofficejira.css"/>-->
+    <!--<resource type="download" name="onlyofficejira.js" location="/js/onlyofficejira.js"/>-->
     <resource type="download" name="images/" location="/images"/>
     <context>onlyofficejira</context>
-    <context>jira.view.issue</context>
-    <!--<context>jira.navigator.advanced</context>-->
-    <context>jira.navigator.simple</context>
-    <!--<context>jira.general</context>-->
-    <!--<context>atl.general</context>-->
+    <!--<context>jira.view.issue</context>-->
+    <!--<context>jira.navigator.simple</context>-->
   </web-resource>
   <rest name="Attachment Rest" i18n-name-key="attachment-rest.name" key="attachment-rest" path="/onlyoffice" version="1.0">
     <description key="attachment-rest.description">The Attachment Rest Plugin</description>
   </rest>
-  <web-panel name="OnlyOfficeLinks" i18n-name-key="only-office-links.name" key="only-office-links" location="atl.jira.view.issue.left.context" weight="500">
-    <description key="only-office-links.description">The OnlyOfficeLinks Plugin</description>
-    <context-provider class="ru.hlynov.oit.panel.OnlyOfficeLinks"/>
-    <resource name="view" type="velocity" location="templates/onlyoffice-editor-panel/only-office.vm"/>
-    <label key="Вложения"/>
-    <context>jira.view.issue</context>
-  </web-panel>
+  <!--<web-panel name="OnlyOfficeLinks" i18n-name-key="only-office-links.name" key="only-office-links" location="atl.jira.view.issue.left.context" weight="500">-->
+    <!--<description key="only-office-links.description">The OnlyOfficeLinks Plugin</description>-->
+    <!--<context-provider class="ru.hlynov.oit.panel.OnlyOfficeLinks"/>-->
+    <!--<resource name="view" type="velocity" location="templates/onlyoffice-editor-panel/only-office.vm"/>-->
+    <!--<label key="Вложения"/>-->
+    <!--<context>jira.view.issue</context>-->
+  <!--</web-panel>-->
   <servlet name="Only Office Editor Servlet" i18n-name-key="only-office-editor-servlet.name" key="only-office-editor-servlet" class="ru.hlynov.oit.servlet.OnlyOfficeEditorServlet">
     <description key="only-office-editor-servlet.description">The Only Office Editor Servlet Plugin</description>
     <url-pattern>/onlyoffice/doceditor</url-pattern>
